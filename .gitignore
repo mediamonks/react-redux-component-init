@@ -1,0 +1,5 @@
+# copy to .npmignore
+.idea
+node_modules
+
+# only ignore in git

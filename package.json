@@ -1,0 +1,29 @@
+{
+  "name": "react-redux-init",
+  "version": "0.1.0",
+  "description": "A library to manage async cpmponent initialization in isomorphic React/Redux applications with server-side rendering",
+  "main": "./lib/index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flut1/react-redux-init.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "ismorphic",
+    "async",
+    "components",
+    "initializatoin",
+    "SSR",
+    "server-side rendering"
+  ],
+  "author": "Floris Bernard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flut1/react-redux-init/issues"
+  },
+  "homepage": "https://github.com/flut1/react-redux-init#readme"
+}
