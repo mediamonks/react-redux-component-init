@@ -1,4 +1,4 @@
-export { default as withInit } from './withInit';
+export { default as withInitAction } from './withInitAction';
 export { default as initReducer } from './reducer';
 
 export { default as initComponent } from './actions/initComponent';
