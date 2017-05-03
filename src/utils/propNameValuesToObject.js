@@ -8,7 +8,7 @@
  * in the `propNames` array.
  * @returns {object} The result object
  */
-export const propNameValuesToObject = (propNames, propValues) => propNames.reduce(
+export default (propNames, propValues) => propNames.reduce(
   (result, propName, index) => {
     const segments = propName.split('.');
 

@@ -98,6 +98,7 @@ export default (p1, p2, p3) => {
       };
 
       render() {
+        // eslint-disable-next-line no-unused-vars
         const { __componentInitState, __initComponent, __modeInitSelf, ...props } = this.props;
         const { initialized } = __componentInitState;
         const isInitializing = (initSelf !== INIT_SELF_NEVER) && __modeInitSelf && !initialized;

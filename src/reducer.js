@@ -39,13 +39,14 @@ export default (state = {
   }
 };
 
-const createComponentInitValuesSelector = ({ componentId, initProps }) => createShallowArrayCompareSelector(
-  (state, props) => extractPropsFromObject(props, initProps),
-  initValues => ({
-    prepareHash: createPrepareHash(componentId, initValues),
-    initValues,
-  }),
-);
+const createComponentInitValuesSelector = ({ componentId, initProps }) =>
+  createShallowArrayCompareSelector(
+    (state, props) => extractPropsFromObject(props, initProps),
+    initValues => ({
+      prepareHash: createPrepareHash(componentId, initValues),
+      initValues,
+    }),
+  );
 
 export const createComponentInitStateSelector = initConfig => createSelector(
   createComponentInitValuesSelector(initConfig),
