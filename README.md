@@ -22,14 +22,14 @@ Below is a general explanation of the implementation for this library. For detai
 
 ### Initialization lifecycle
  - **Server side** on the server, we don't start rendering until all components have been initialized.
-   1. **Set `initMode`** the `initMode` is initially set to `PREPARE` to indicate that we want to initialize components before we mount them.
+   1. **Set `initMode`** the `initMode` is initially set to `MODE_PREPARE` to indicate that we want to initialize components before we mount them.
    2. **Component prepare** Before we start rendering, we need to call the initialization action of every component configured with `withInitAction()`. We refer to this as "preparing a component" and this can be done using the `prepareComponent()` action. For more info see "The prepare tree" below.
 _Note: "lazy" components are an exception and will skip this step. For more info see the `withInitAction()` docs below_
    3. **Wait for preparation to complete** Before we render our page, we need to wait for the preparation to complete. This can be done using the promise returned by `prepareComponent()`
    4. **Render** Our page can now be rendered. To make sure we never skip an initialization action, all components configured with `withInitAction()` will throw an error if mounted without preparing it first.
  - **Client side** on the client, we don't want to redo initialization that has already been done on the server. When new components mount (for example, on client-side navigation), they should be initialized as well.
    1. **First render** this is essentially the same as step 4 on the server side. All component preparation has already been done on the server.
-   2. **Set `initMode`** we dispatch `setInitMode(INIT_SELF)` to indicate that new components should initialize themselves as soon as they mount.
+   2. **Set `initMode`** we dispatch `setInitMode(MODE_INIT_SELF)` to indicate that new components should initialize themselves as soon as they mount.
    3. **Next render(s)** If a new component wrapped in `withInitAction()` mounts, it will automatically initialize. Additionally, a component can also be configured to re-initialize if its `props` update.
 _Note: By default, the component will start rendering even if the `initAction` has not completed yet. For more info see the `withInitAction()` docs below._
 
@@ -37,7 +37,7 @@ _Note: By default, the component will start rendering even if the `initAction` h
 As described in "initialization lifecycle" above, we need to dispatch `prepareComponent()` for each component on the page before page render. But how do we know in advance which components will be on our page? The trick is to configure our page component initialization to dispatch `prepareComponent()` for each direct child component with an `initAction`. We configure the child component initialization to dispatch `prepareComponent()` for their children, and so on. This way, we only have to dispatch `prepareComponent()` on the page component we want to render and it will recursively prepare its descendants.
 _(TODO: fancy graphic showing prepare tree schematic)_
 
-**Example**
+#### Example
 Consider a `TimelinePage`. This page will need to load a list of _posts_ from the API. For each _post_ we want to display a `Post` component and load a list of _comments_ from the API. For each comment, we will need to render a `Comment` component. Finally, the `Comment` component will also need to load some data to display the number of _likes_ and _replies_.
 _(TODO: fancy graphic showing page layout)_
 
@@ -64,10 +64,10 @@ Higher-order component that adds initialization configuration to an existing com
    - `initValues` `{object}` An object containing values of the props defined in `initProps`. If `initProps` is not defined, this is an empty object.
  - `options` `{object}` _(optional)_ An object containing additional options:
    - `lazy` If `true`, all calls to `prepareComponent()` will be ignored and `initAction` will be performed on `componentDidMount` on the client, as if it wasn't mounted on first render. This can be used to do non-critical initialization, like loading data for components that display below the fold. _Defaults to `false`_
-   - `reInitialize` If `true`, will call `initAction` again if any of the props defined in `initProps` change after mount. _Defaults to `true`_
-   - `initSelf` A string that indicates the behavior for initialization on the client (`initMode == INIT_SELF`). Possible values:
-     - `ASYNC` _(default)_ the component will render immediately, even if `initAction` is still pending. It is recommended to use this option and render a loading indicator or placeholder content until `initAction` is resolved. This will give the user immediate feedback that something is being loaded. While the `initAction` is pending, an `isInitializing` prop will be passed to the component.
-     - `BLOCKING` this will cause this higher-order component not tot mount the target component until the first initialization has completed. The component will remain mounted during further re-initialization.
-     - `UNMOUNT` same as `BLOCKING` but it will also unmount the component during re-initialization.
-     - `NEVER` will only initialize on the server (`initMode == MODE_PREPARE`). Initialization will be skipped on the client. This is the opposite of setting `lazy: true`
-   - `onError` _(optional)_ error handler for errors in `initActions`.  If given, errors will be swallowed.
+   - `reinitialize` If `true`, will call `initAction` again if any of the props defined in `initProps` change after mount. This change is checked with strict equality (===) _Defaults to `true`_
+   - `initSelf` A string that indicates the behavior for initialization on the client (`initMode == MODE_INIT_SELF`). Possible values:
+     - `"ASYNC"` _(default)_ the component will render immediately, even if `initAction` is still pending. It is recommended to use this option and render a loading indicator or placeholder content until `initAction` is resolved. This will give the user immediate feedback that something is being loaded. While the `initAction` is pending, an `isInitializing` prop will be passed to the component.
+     - `"BLOCKING"` this will cause this higher-order component not tot mount the target component until the first initialization has completed. The component will remain mounted during further re-initialization.
+     - `"UNMOUNT"` same as `"BLOCKING"` but it will also unmount the component during re-initialization.
+     - `"NEVER"` will only initialize on the server (`initMode == MODE_PREPARE`). Initialization will be skipped on the client. This is the opposite of setting `lazy: true`
+   - `onError` _(optional)_ error handler for errors in `initAction`.  If given, errors will be swallowed.
