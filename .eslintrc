@@ -10,7 +10,9 @@
     "node": true
   },
   "rules": {
+    "react/jsx-filename-extension": 0,
     "linebreak-style": 0,
+    "no-underscore-dangle": 0,
     "import/first": "off",
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
