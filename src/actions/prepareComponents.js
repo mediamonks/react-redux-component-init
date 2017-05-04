@@ -1,8 +1,9 @@
 import prepareComponent from './prepareComponent';
 
 /**
- * Simple helper function for preparing multiple components. All components
- * are prepared with the same props.
+ * Simple helper action for preparing multiple components. All components
+ * are prepared with the same props. This action should be dispatched using
+ * the Redux `dispatch` function.
  *
  * This helper can be useful for preparing a set of route components that were
  * a result of page route matching.
