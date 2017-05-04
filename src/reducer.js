@@ -6,6 +6,11 @@ import extractPropsFromObject from './utils/extractPropsFromObject';
 import createPrepareHash from './utils/createPrepareHash';
 import { MODE_PREPARE } from './initMode';
 
+/**
+ * Reducer function that manages the state for `react-redux-init`. This reducer should
+ * be included using Redux's `combineReducers()` under the `init` key in the root of
+ * the store state.
+ */
 export default (state = {
   mode: MODE_PREPARE,
   prepared: [],
