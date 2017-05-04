@@ -2,8 +2,7 @@ import prepareComponent from './prepareComponent';
 
 /**
  * Simple helper action for preparing multiple components. All components
- * are prepared with the same props. This action should be dispatched using
- * the Redux `dispatch` function.
+ * are prepared with the same props.
  *
  * This helper can be useful for preparing a set of route components that were
  * a result of page route matching.
@@ -12,8 +11,10 @@ import prepareComponent from './prepareComponent';
  * Components that have not been wrapped in `withInitAction` will be ignored.
  * @param {object} props The values of `initProps` that should be used during
  * initialization.
- * @returns {Promise} A Promise that resolves when all components have finished
- * initialization
+ * @returns {function} A thunk function that should be passed directly to the Redux
+ * `dispatch()` function. When passed to `dispatch()` it will return a Promsie that
+ * resolves when all components have finished initialization.
+ * @example dispatch(prepareComponents([Header,HomePage,Footer], { route: '/home' }));
  */
 export default (components, props) => dispatch => Promise.all(
   components.map(Component => dispatch(prepareComponent(Component, props))),

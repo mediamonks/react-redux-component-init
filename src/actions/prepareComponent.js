@@ -14,7 +14,8 @@ import initComponent from './initComponent';
  * @param {object} props The values of `initProps` to initialize this component with. These
  * values should be the same as the props that the component will eventually mount with. Omitting
  * one of the `initProps` values configured in `withInitAction()` will result in an error.
- * @returns A thunk function that should be passed directly to the Redux `dispatch` function.
+ * @returns {function} A thunk function that should be passed directly to the Redux `dispatch`
+ * function.
  * @example dispatch(prepareComponent(Comment, { commentId: 5 }));
  */
 export default (Component, props) =>
