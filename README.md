@@ -59,7 +59,7 @@ Higher-order component that adds initialization configuration to an existing com
    - Component preparation using `withPrepare()` only executes once for each combination of these props. Duplicate calls (with the same `Component` and the same values for `initProps`) will be ignored.
    - By default, if these props change value on the client, the component will "re-initialize". See `options` below
    - Dot notation can be used to define a subset of an object prop. For example, when using `['foo.bar', 'foo.foobar']` the `initAction`  will only get the properties `bar` and `foobar` on the `foo` prop.
- - `initAction` `{(dispatch, initValues) => Promise}` This is the actual initialization function. This function **must return a Promise** that resolves when initialization is complete. It retrieves the following arguments:
+ - `initAction` `{(dispatch, initValues) => Promise}` This is the actual initialization function. This function **must return a Promise** that resolves when initialization is complete. It receives the following arguments:
    - `dispatch` `{function}` The redux dispatch function. This can be used to dispatch initialization actions or dispatch the `withPrepare()` action for child components
    - `initValues` `{object}` An object containing values of the props defined in `initProps`. If `initProps` is not defined, this is an empty object.
  - `options` `{object}` _(optional)_ An object containing additional options:
@@ -70,4 +70,5 @@ Higher-order component that adds initialization configuration to an existing com
      - `"BLOCKING"` this will cause this higher-order component not tot mount the target component until the first initialization has completed. The component will remain mounted during further re-initialization.
      - `"UNMOUNT"` same as `"BLOCKING"` but it will also unmount the component during re-initialization.
      - `"NEVER"` will only initialize on the server (`initMode == MODE_PREPARE`). Initialization will be skipped on the client. This is the opposite of setting `lazy: true`
-   - `onError` _(optional)_ error handler for errors in `initAction`.  If given, errors will be swallowed.
+   - `onError` Error handler for errors in `initAction`.  If given, errors will be swallowed.
+   - `getInitState` A function that takes the Redux state and returns the init state of the reducer from this module. By default, it is assumed the state is under the `init` property. If the reducer is included elsewhere, this function can be set to retrieve the state.

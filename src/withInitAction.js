@@ -14,6 +14,46 @@ import {
 
 const componentIds = [];
 
+/**
+ * Attaches an initialization action to a component.
+ * @param {Array<string>} [initProps] An array of names of props that are relevant for
+ * initialization. Only these props will be available in the initAction function. A component
+ * is required to have these props during mount and when dispatching the prepareComponent action.
+ * By default, if these props change value on the client, the component will "re-initialize".
+ * See the "options" parameters.
+ * @param {function} initAction The initialization action. It receives the following arguments:
+ *  - `dispatch` The redux dispatch function
+ *  - `initValues` An object containing the values for each of the initProps.
+ * This function MUST return a Promise that resolves once initialization has completed.
+ * @param {object} options Additional optional options
+ * @param {boolean} [options.reinitialize=true] If true, will call `initAction` again if any of the
+ * props defined in `initProps` change after mount. This change is checked using
+ * strict equality (===)
+ * @param {boolean} [options.lazy=false] If true, all calls to `prepareComponent()` will be ignored
+ * and `initAction` will be performed on `componentDidMount` on the client as if it wasn't
+ * mounted on first render. This can be used to do non-critical initialization, like loading data
+ * for components that display below the fold.
+ * @param {string} [options.initSelf="ASYNC"] A string that indicates the behavior for
+ * initialization on the client (`initMode == MODE_INIT_SELF`). Possible values:
+ * - "ASYNC" the component will render immediately, even if `initAction` is still pending.
+ *   It is recommended to use this option and render a loading indicator or placeholder content
+ *   until `initAction` is resolved. This will give the user immediate feedback that something is
+ *   being loaded. While the `initAction` is pending, an `isInitializing` prop will be
+ *   passed to the component.
+ * - "BLOCKING" this will cause this higher-order component not tot mount the target component
+ *   until the first initialization has completed. The component will remain mounted during
+ *   further re-initialization.
+ * - "UNMOUNT" same as "BLOCKING" but it will also unmount the component during re-initialization.
+ * - "NEVER" will only initialize on the server (initMode == MODE_PREPARE). Initialization will
+ *   be skipped on the client. This is the opposite of setting `lazy: true`
+ * @param {function} [options.onError] Error handler for errors that occur while executing
+ * initAction. If given, errors will be swallowed.
+ * @param {function} [options.getInitState] A function that takes the Redux state and returns
+ * the init state of the reducer from this module. By default, it is assumed that the state is
+ * under the "init" property. If the reducer is included elsewhere, this function can be set
+ * to retrieve the state.
+ * @returns {function(*)}
+ */
 export default (p1, p2, p3) => {
   let initProps = [];
   let initAction = p1;
