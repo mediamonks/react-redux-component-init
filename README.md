@@ -67,7 +67,7 @@ Attach the `react-redux-init` reducer to your Redux store under the `init` key. 
 Please note: it is recommended to attach the reducer to the `init` key, but it is also possible to include the reducer elsewhere in the state. See the `getInitState` option of the `withInitAction()` HoC.
 
 #### Server side page rendering
-In the function that renders your page on the server, call `prepareComponent` with the page components you will render before you render your page. The example below is using [express](https://expressjs.com/) and [react-router 3](https://github.com/ReactTraining/react-router), but these are not required.
+In the function that renders your page on the server, call `prepareComponent` with the page components you will render before you render your page. The example below is using [express](https://expressjs.com/) and [react-router](https://github.com/ReactTraining/react-router) 3, but these are not required.
 ```
 import { prepareComponents } from 'react-redux-init';
 import { match, RouterContext } from 'react-router';
