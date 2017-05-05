@@ -94,7 +94,7 @@ export default (p1, p2, p3) => {
         __modeInitSelf: PropTypes.bool.isRequired,
         __componentInitState: PropTypes.shape({
           initValues: PropTypes.arrayOf(PropTypes.any).isRequired,
-          prepareHash: PropTypes.string.isRequired,
+          prepareKey: PropTypes.string.isRequired,
           initialized: PropTypes.bool.isRequired,
         }).isRequired,
       };
@@ -105,10 +105,10 @@ export default (p1, p2, p3) => {
 
 
       componentWillMount() {
-        const { initValues, prepareHash } = this.props.__componentInitState;
+        const { initValues, prepareKey } = this.props.__componentInitState;
 
         if (initSelf !== INIT_SELF_NEVER) {
-          this.props.__initComponent(this, initValues, prepareHash).catch(this.handleInitError);
+          this.props.__initComponent(this, initValues, prepareKey).catch(this.handleInitError);
         }
       }
 

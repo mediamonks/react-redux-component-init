@@ -1,6 +1,6 @@
 import { MODE_PREPARE } from '../initMode';
 import extractPropsFromObject from '../utils/extractPropsFromObject';
-import createPrepareHash from '../utils/createPrepareHash';
+import createPrepareKey from '../utils/createPrepareKey';
 
 import initComponent from './initComponent';
 
@@ -48,9 +48,9 @@ export default (Component, props) =>
         });
 
         if (!lazy) {
-          const prepareHash = createPrepareHash(componentId, initValues);
+          const prepareKey = createPrepareKey(componentId, initValues);
 
-          return dispatch(initComponent(Component, initValues, prepareHash, {
+          return dispatch(initComponent(Component, initValues, prepareKey, {
             isPrepare: true,
           }));
         }

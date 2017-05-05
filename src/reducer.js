@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import createShallowArrayCompareSelector from './utils/createShallowArrayCompareSelector';
 import { INIT_COMPONENT, SET_INIT_MODE } from './actions/actionTypes';
 import extractPropsFromObject from './utils/extractPropsFromObject';
-import createPrepareHash from './utils/createPrepareHash';
+import createPrepareKey from './utils/createPrepareKey';
 import { MODE_PREPARE } from './initMode';
 
 /**
@@ -28,7 +28,7 @@ export default (state = {
           ...state,
           selfInit: {
             ...state.selfInit,
-            [action.payload.prepareHash]: action.payload.complete,
+            [action.payload.prepareKey]: action.payload.complete,
           },
         };
       }
@@ -36,7 +36,7 @@ export default (state = {
         ...state,
         prepared: {
           ...state.prepared,
-          [action.payload.prepareHash]: action.payload.complete,
+          [action.payload.prepareKey]: action.payload.complete,
         },
       };
     default:
@@ -48,7 +48,7 @@ const createComponentInitValuesSelector = ({ componentId, initProps }) =>
   createShallowArrayCompareSelector(
     (state, props) => extractPropsFromObject(props, initProps),
     initValues => ({
-      prepareHash: createPrepareHash(componentId, initValues),
+      prepareKey: createPrepareKey(componentId, initValues),
       initValues,
     }),
   );
@@ -56,9 +56,9 @@ const createComponentInitValuesSelector = ({ componentId, initProps }) =>
 export const createComponentInitStateSelector = initConfig => createSelector(
   createComponentInitValuesSelector(initConfig),
   state => state.selfInit,
-  ({ prepareHash, initValues }, selfInit) => ({
-    prepareHash,
+  ({ prepareKey, initValues }, selfInit) => ({
+    prepareKey,
     initValues,
-    initialized: !!selfInit[prepareHash],
+    initialized: !!selfInit[prepareKey],
   }),
 );
