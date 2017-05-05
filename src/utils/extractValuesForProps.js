@@ -1,8 +1,8 @@
 /**
- * Retrieves properties from the given object.
- * @param target The object to retrieve the properties from.
+ * Extracts values from the `target` object for each of the given `props`.
+ * @param {object} target The object to retrieve the values from.
  * @param {Array<string>} props An array of property names to retrieve. If a property
- * name has a dot in it, it will look up a nested property. For example, the string
+ * name has a dot in it, it will look up a nested value. For example, the string
  * `"foo.bar"` will look up the property `bar` on the property `foo` on the given
  * `target` object. If one of the parent properties in this string is not `typeof object`,
  * the value will be `undefined`.

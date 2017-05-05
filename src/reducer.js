@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 import createShallowArrayCompareSelector from './utils/createShallowArrayCompareSelector';
 import { INIT_COMPONENT, SET_INIT_MODE } from './actions/actionTypes';
-import extractPropsFromObject from './utils/extractPropsFromObject';
+import extractValuesForProps from './utils/extractValuesForProps';
 import createPrepareKey from './utils/createPrepareKey';
 import { MODE_PREPARE } from './initMode';
 
@@ -46,7 +46,7 @@ export default (state = {
 
 const createComponentInitValuesSelector = ({ componentId, initProps }) =>
   createShallowArrayCompareSelector(
-    (state, props) => extractPropsFromObject(props, initProps),
+    (state, props) => extractValuesForProps(props, initProps),
     initValues => ({
       prepareKey: createPrepareKey(componentId, initValues),
       initValues,

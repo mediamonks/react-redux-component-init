@@ -1,5 +1,5 @@
 import { MODE_PREPARE } from '../initMode';
-import extractPropsFromObject from '../utils/extractPropsFromObject';
+import extractValuesForProps from '../utils/extractValuesForProps';
 import createPrepareKey from '../utils/createPrepareKey';
 
 import initComponent from './initComponent';
@@ -39,7 +39,7 @@ export default (Component, props) =>
 
       const { mode } = initState;
       if (mode === MODE_PREPARE) {
-        const initValues = extractPropsFromObject(props, initProps);
+        const initValues = extractValuesForProps(props, initProps);
 
         initValues.forEach((initValue, index) => {
           if (typeof initValue === 'undefined') {
