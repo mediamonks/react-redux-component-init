@@ -17,4 +17,19 @@ describe('createPrepareKey', () => {
     const prepareKeyB = createPrepareKey('Foo', [objB]);
     expect(prepareKeyA).toBe(prepareKeyB);
   });
+  it('should return different keys for different componentId', () => {
+    const prepareKeyA = createPrepareKey('Foo', [1, 2, 3]);
+    const prepareKeyB = createPrepareKey('Bar', [1, 2, 3]);
+    expect(prepareKeyA).not.toBe(prepareKeyB);
+  });
+  it('should return different keys for different props', () => {
+    const prepareKeyA = createPrepareKey('Foo', [1, 2, 3]);
+    const prepareKeyB = createPrepareKey('Foo', [1, 0, 3]);
+    expect(prepareKeyA).not.toBe(prepareKeyB);
+  });
+  it('should return different keys for different prop orders', () => {
+    const prepareKeyA = createPrepareKey('Foo', [1, 2, 3]);
+    const prepareKeyB = createPrepareKey('Foo', [2, 1, 3]);
+    expect(prepareKeyA).not.toBe(prepareKeyB);
+  });
 });
