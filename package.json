@@ -4,6 +4,7 @@
   "description": "A library to manage async cpmponent initialization in isomorphic React/Redux applications with server-side rendering",
   "main": "./lib/index.js",
   "scripts": {
+    "test": "jest",
     "build": "npm run build:commonjs",
     "build:commonjs": "babel src --out-dir lib",
     "clean": "rimraf lib",
