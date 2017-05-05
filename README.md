@@ -18,7 +18,7 @@ In a react application, we often want to perform a certain action when a compone
 This library aims to provide utilities to make the *component based approach* a feasible solution. It allows us to define initialization on each component without having to do more than one render.
 
 ## Core concepts
-Below is a general explanation of the implementation for this library. For detailed setup instructions, see "Setup" below.
+Below is a general explanation of the implementation for this library. For quick setup instructions, see "Setup" below.
 
 ### Initialization lifecycle
  - **Server side** on the server, we don't start rendering until all components have been initialized.
@@ -48,6 +48,57 @@ We use `withInitAction()` to add the following initialization to our components:
 
 _(TODO: fancy graphic showing prepare tree for this example)_
 _NOTE: this is just an example where the comment data is loaded in a separate api call as the post data. This does not have to be the case in every application_
+
+## Setup
+Make sure you have an existing setup with the prerequisites listed above.
+
+#### Attach the reducer
+Attach the `react-redux-init` reducer to your Redux store under the `init` key. The easiest way to do this is by using [Redux combineReducers()](http://redux.js.org/docs/api/combineReducers.html):
+   ```
+   import { combineReducers, createStore } from 'redux';
+   import { initReducer as init } from 'react-redux-init';
+
+   const mainReducer = combineReducers({
+      init: initReducer,
+      // ... other reducers in the application
+   });
+   const store = createStore(mainReducer);
+   ```
+Please note: it is recommended to attach the reducer to the `init` key, but it is also possible to include the reducer elsewhere in the state. See the `getInitState` option of the `withInitAction()` HoC.
+
+#### Server side page rendering
+In the function that renders your page on the server, call `prepareComponent` with the page components you will render before you render your page. The example below is using [express](https://expressjs.com/) and [react-router 3](https://github.com/ReactTraining/react-router), but these are not required.
+```
+import { prepareComponents } from 'react-redux-init';
+import { match, RouterContext } from 'react-router';
+import { Provider } from 'react-redux';
+import { renderToString } from 'react-dom/server';
+...
+function renderPage(req, res) {
+  ...
+  match({ routes: Routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    ...
+    // note: prepareComponents is just a shorthand for multiple prepareComponent() wrapped in Promise.all()
+    store.dispatch(prepareComponents(
+      renderProps.routes.map(route => route.component),
+      renderProps
+    )).then(() => {
+      res.send(renderToString(
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      );
+    });
+  });
+}
+```
+#### Set initMode on client
+On the client side of your application you should switch the initMode to `MODE_INIT_SELF` **after the first render**.
+```
+import { setInitMode, MODE_INIT_SELF } from 'react-redux-init';
+...
+store.dispatch(setInitMode(MODE_INIT_SELF));
+```
 
 ## API Documentation
 ### `withInitAction([initProps], initAction, [options])(Component)`
