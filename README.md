@@ -54,16 +54,16 @@ Make sure you have an existing setup with the prerequisites listed above.
 
 #### Attach the reducer
 Attach the `react-redux-init` reducer to your Redux store under the `init` key. The easiest way to do this is by using [Redux combineReducers()](http://redux.js.org/docs/api/combineReducers.html):
-   ```
-   import { combineReducers, createStore } from 'redux';
-   import { initReducer as init } from 'react-redux-init';
+```
+import { combineReducers, createStore } from 'redux';
+import { initReducer as init } from 'react-redux-init';
 
-   const mainReducer = combineReducers({
-      init: initReducer,
-      // ... other reducers in the application
-   });
-   const store = createStore(mainReducer);
-   ```
+const mainReducer = combineReducers({
+  init: initReducer,
+  // ... other reducers in the application
+});
+const store = createStore(mainReducer);
+```
 Please note: it is recommended to attach the reducer to the `init` key, but it is also possible to include the reducer elsewhere in the state. See the `getInitState` option of the `withInitAction()` HoC.
 
 #### Server side page rendering
