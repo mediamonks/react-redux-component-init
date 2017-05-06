@@ -70,6 +70,7 @@ export default (p1, p2, p3) => {
     onError,
     getInitState = defaultGetInitState,
     initSelf = INIT_SELF_ASYNC,
+    lazy = false,
   } = options;
 
   return (WrappedComponent) => {
@@ -86,7 +87,7 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
-      options: { reinitialize, onError, getInitState, initSelf },
+      options: { reinitialize, onError, getInitState, initSelf, lazy },
     };
 
     class WithInit extends Component {
