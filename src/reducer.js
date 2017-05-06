@@ -13,8 +13,8 @@ import { MODE_PREPARE } from './initMode';
  */
 export default (state = {
   mode: MODE_PREPARE,
-  prepared: [],
-  selfInit: [],
+  prepared: {},
+  selfInit: {},
 }, action) => {
   switch (action.type) {
     case SET_INIT_MODE:
