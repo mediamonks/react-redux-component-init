@@ -1,4 +1,4 @@
-import { propNameValuesToObject } from '../utils/propNameValuesToObject';
+import propNameValuesToObject from '../utils/propNameValuesToObject';
 import { MODE_INIT_SELF, MODE_PREPARE } from '../initMode';
 import { INIT_SELF_NEVER } from '../initSelfMode';
 
@@ -32,7 +32,7 @@ export default (
   Component,
   initValues,
   prepareKey,
-  { isPrepare = false },
+  { isPrepare = false } = {},
 ) => (dispatch, getState) => {
   if (!Component.initConfig) {
     throw new Error('No init config found on Component passed to initComponent');
