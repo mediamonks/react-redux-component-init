@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import withInitAction from '../src/withInitAction';
+import withInitAction, { clearComponentIds } from '../src/withInitAction';
 import { INIT_SELF_ASYNC, INIT_SELF_BLOCKING } from '../src/initSelfMode';
 
 /* eslint-disable react/prefer-stateless-function, react/no-multi-comp */
 describe('withInitAction', () => {
   describe('with a non-functional component', () => {
     describe('and no initProps or options', () => {
+      clearComponentIds();
       class FooComponent extends Component {
         render() {
           return <noscript />;
@@ -31,7 +32,8 @@ describe('withInitAction', () => {
     });
 
     it('should set the options on the initConfig object', () => {
-      class FooComponent2 extends Component {
+      clearComponentIds();
+      class FooComponent extends Component {
         render() {
           return <noscript />;
         }
@@ -49,7 +51,7 @@ describe('withInitAction', () => {
           getInitState: getInitStateDummy,
           onError: onErrorDummy,
         },
-      )(FooComponent2);
+      )(FooComponent);
 
       it('sets the reinitialize option', () => {
         expect(WithInit.initConfig.reinitialize).toBe(false);
@@ -70,11 +72,12 @@ describe('withInitAction', () => {
   });
 
   describe('with a functional component', () => {
-    const FooComponent3 = () => <noscript />;
+    clearComponentIds();
+    const FooComponent = () => <noscript />;
 
     const WithInit = withInitAction(
       () => Promise.resolve(),
-    )(FooComponent3);
+    )(FooComponent);
 
     it('has a string componentId', () => {
       expect(typeof WithInit.initConfig.componentId).toBe('string');
@@ -83,28 +86,31 @@ describe('withInitAction', () => {
   });
 
   it('throws an error for components without a name or displayName', () => {
-    const FooComponent4 = () => <noscript />;
-    delete FooComponent4.name;
+    clearComponentIds();
+    const FooComponent = () => <noscript />;
+    delete FooComponent.name;
 
     expect(() => {
       // eslint-disable-next-line no-unused-vars
       const WithInit = withInitAction(
         () => Promise.resolve(),
-      )(FooComponent4);
+      )(FooComponent);
     }).toThrow();
   });
 
   it('set the initProps', () => {
-    const FooComponent5 = () => <noscript />;
+    clearComponentIds();
+    const FooComponent = () => <noscript />;
 
     const WithInit = withInitAction(
       ['a', 'b', 'c'],
       () => Promise.resolve(),
-    )(FooComponent5);
+    )(FooComponent);
     expect(WithInit.initConfig.initProps).toEqual(['a', 'b', 'c']);
   });
 
   it('throws an error when two components with the same displayName are passed', () => {
+    clearComponentIds();
     class BarComponent extends Component {
       render() {
         return <noscript />;

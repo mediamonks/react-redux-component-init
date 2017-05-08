@@ -177,3 +177,11 @@ export default (p1, p2, p3) => {
     return ConnectedWithInit;
   };
 };
+
+/**
+ * Clears the component ids array used to detect duplicate components. Used for
+ * testing to clear the state in between tests.
+ */
+export function clearComponentIds() {
+  componentIds.length = 0;
+}
