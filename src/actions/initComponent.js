@@ -67,7 +67,7 @@ export default (
     });
 
     return Promise.resolve()
-      .then(initAction(initPropsObj, dispatch, getState))
+      .then(() => initAction(initPropsObj, dispatch, getState))
       .catch((e) => {
         if (onError) {
           onError(e);
