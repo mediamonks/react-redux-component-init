@@ -67,9 +67,19 @@ export default (
     });
 
     return Promise.resolve()
-      .then(() => initAction(initPropsObj, dispatch, getState))
+      .then(() => {
+        const initActionReturn = initAction(initPropsObj, dispatch, getState);
+
+        if (typeof initActionReturn.then !== 'function') {
+          const error = new Error(`Expected initAction to return a Promise. Returned an ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`);
+          error.isInvalidReturnError = true;
+          throw error;
+        }
+
+        return initActionReturn;
+      })
       .catch((e) => {
-        if (onError) {
+        if (onError && !e.isInvalidReturnError) {
           onError(e);
         } else {
           throw e;

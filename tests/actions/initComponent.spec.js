@@ -279,4 +279,18 @@ describe('initComponent', () => {
       ).not.toThrow();
     });
   });
+  describe('with an initAction that does not return a Promise', () => {
+    clearComponentIds();
+    const store = mockStore({ init: { mode: MODE_INIT_SELF, prepared: {} } });
+    const MockComponent = () => <noscript />;
+    const MockWithInit = withInitAction(
+      () => 5,
+    )(MockComponent);
+
+    it('rejects the returned promise', () => {
+      expect(
+        store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')),
+      ).rejects.toBeDefined();
+    });
+  });
 });
