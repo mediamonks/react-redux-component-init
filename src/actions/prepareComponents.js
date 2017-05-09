@@ -7,7 +7,7 @@ import prepareComponent from './prepareComponent';
  * This helper can be useful for preparing a set of route components that were
  * a result of page route matching.
  *
- * @param {Array<React.Component>} components An array of components to initialize.
+ * @param {Array<react.Component>} components An array of components to initialize.
  * Components that have not been wrapped in `withInitAction` will be ignored.
  * @param {object} props The values of `initProps` that should be used during
  * initialization.

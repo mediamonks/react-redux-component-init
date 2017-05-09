@@ -15,7 +15,7 @@ import { INIT_COMPONENT } from './actionTypes';
  * action is automatically dispatched by the `withInitAction()` HoC and the `prepareComponent()`
  * thunk.
  *
- * @param {React.Component} Component The React component to initialize. Passing a component that
+ * @param {react.Component} Component The React component to initialize. Passing a component that
  * was not wrapped with `withInitAction()` will result in an error.
  * @param {Array} initValues An array of values that correspond with the array of `initProps` for
  * this component. These values are either passed through `prepareComponent()` or extracted from
