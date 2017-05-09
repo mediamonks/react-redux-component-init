@@ -48,6 +48,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "jest": "^20.0.0",
+    "react-redux": "^5.0.4",
     "redux-mock-store": "^1.2.3",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.1"
