@@ -87,7 +87,7 @@ export default (
 
         return result;
       });
-  } else if (mode === MODE_PREPARE) {
+  } else if (mode === MODE_PREPARE && !isPrepare) {
     if (typeof prepared[prepareKey] === 'undefined') {
       const initPropsObj = propNameValuesToObject(initProps, initValues);
       throw new Error(`Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(initPropsObj)}`);
