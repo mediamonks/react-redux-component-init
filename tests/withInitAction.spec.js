@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import withInitAction, { clearComponentIds } from '../src/withInitAction';
 import { INIT_SELF_ASYNC, INIT_SELF_BLOCKING } from '../src/initSelfMode';
 
