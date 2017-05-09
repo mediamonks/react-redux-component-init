@@ -128,14 +128,16 @@ describe('initComponent', () => {
         const MockWithInit = withInitAction(
           () => new Promise((resolve, reject) => setTimeout(() => reject('bar'), 40)),
         )(MockComponent);
-        const initPromise = store.dispatch(initComponent(
-          MockWithInit,
-          [],
-          'MockComponent[]',
-          { isPrepare: true },
-        ));
 
-        it('rejects the return promise', () => expect(initPromise).rejects.toBe('bar'));
+        it(
+          'rejects the return promise',
+          () => expect(store.dispatch(initComponent(
+            MockWithInit,
+            [],
+            'MockComponent[]',
+            { isPrepare: true },
+          ))).rejects.toBe('bar'),
+        );
       });
       describe('with an initAction that rejects and an error handler', () => {
         clearComponentIds();
