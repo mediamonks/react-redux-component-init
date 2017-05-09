@@ -111,8 +111,9 @@ Higher-order component that adds initialization configuration to an existing com
    - By default, if these props change value on the client, the component will "re-initialize". See `options` below
    - Dot notation can be used to define a subset of an object prop. For example, when using `['foo.bar', 'foo.foobar']` the `initAction`  will only get the properties `bar` and `foobar` on the `foo` prop.
  - `initAction` `{(dispatch, initValues) => Promise}` This is the actual initialization function. This function **must return a Promise** that resolves when initialization is complete. It receives the following arguments:
+   - `props` `{object}` An object containing values of the props defined in `initProps`. If `initProps` is not defined, this is an empty object.
    - `dispatch` `{function}` The redux dispatch function. This can be used to dispatch initialization actions or dispatch the `withPrepare()` action for child components
-   - `initValues` `{object}` An object containing values of the props defined in `initProps`. If `initProps` is not defined, this is an empty object.
+   - `getState` `{function}` The redux getState function.
  - `options` `{object}` _(optional)_ An object containing additional options:
    - `lazy` If `true`, all calls to `prepareComponent()` will be ignored and `initAction` will be performed on `componentDidMount` on the client, as if it wasn't mounted on first render. This can be used to do non-critical initialization, like loading data for components that display below the fold. _Defaults to `false`_
    - `reinitialize` If `true`, will call `initAction` again if any of the props defined in `initProps` change after mount. This change is checked with strict equality (===) _Defaults to `true`_

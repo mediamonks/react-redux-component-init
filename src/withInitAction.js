@@ -23,8 +23,9 @@ const componentIds = [];
  * By default, if these props change value on the client, the component will "re-initialize".
  * See the "options" parameters.
  * @param {function} initAction The initialization action. It receives the following arguments:
+ *  - `props` An object containing the values for each of the initProps.
  *  - `dispatch` The redux dispatch function
- *  - `initValues` An object containing the values for each of the initProps.
+ *  - `getState` The redux getState function
  * This function MUST return a Promise that resolves once initialization has completed.
  * @param {object} options Additional optional options
  * @param {boolean} [options.reinitialize=true] If true, will call `initAction` again if any of the
