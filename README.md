@@ -44,12 +44,15 @@ Below is an example of a `HomePage` component layout. We will need to load the n
 ![Example homepage](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-homepage.png)
 
 We use `withInitAction()` to add the following initialization to our components:
- 1. `TimelinePage` loads a list of posts. After that is completed, it will call `prepareComponent(Post, { id: postId })` for each post
- 2. `Post` loads the list of comments for the provided post `id`. After that is completed, it will call `prepareComponent(Comment, { id: commentId })` for each `Comment`
- 3. `Comment` loads the number of _likes_ and _replies_ for the comment
+ - `Homepage` calls `prepareComponent(Header)` and `prepareComponent(HomeTimeline)`
+ - `Header` calls `prepareComponent(HeaderNotifications)`
+ - `HeaderNotifications` loads the notifications for the current user
+ - `HomeTimeline` loads a list of posts. It now has a couple of post ids and calls `prepareComponent(Post, { id: postId })` for each post
+ - `Post` loads some detail data to display the itself
 
-_(TODO: fancy graphic showing prepare tree for this example)_
-_NOTE: this is just an example where the comment data is loaded in a separate api call as the post data. This does not have to be the case in every application_
+![Example prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-prepare-tree.png)
+
+_NOTE: In this example, the list of posts are loaded separately from the post detail data. In another application this might be a single call_
 
 ## Setup
 Make sure you have an existing setup with the prerequisites listed above.
