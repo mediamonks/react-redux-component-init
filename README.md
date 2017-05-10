@@ -35,6 +35,7 @@ _Note: By default, the component will start rendering even if the `initAction` h
 
 ### The prepare tree
 As described in "initialization lifecycle" above, we need to dispatch `prepareComponent()` for each component on the page before page render. But how do we know in advance which components will be on our page? The trick is to configure our page component initialization to dispatch `prepareComponent()` for each direct child component with an `initAction`. We configure the child component initialization to dispatch `prepareComponent()` for their children, and so on. This way, we only have to dispatch `prepareComponent()` on the page component we want to render and it will recursively prepare its descendants.
+
 ![The prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/prepare-tree.png)
 
 #### Example
