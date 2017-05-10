@@ -39,8 +39,9 @@ As described in "initialization lifecycle" above, we need to dispatch `prepareCo
 ![The prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/prepare-tree.png)
 
 #### Example
-Consider a `TimelinePage`. This page will need to load a list of _posts_ from the API. For each _post_ we want to display a `Post` component and load a list of _comments_ from the API. For each comment, we will need to render a `Comment` component. Finally, the `Comment` component will also need to load some data to display the number of _likes_ and _replies_.
-_(TODO: fancy graphic showing page layout)_
+Below is an example of a `HomePage` component layout. We will need to load the notifications to display in the header, the list of posts, and some detail data for each post.
+
+![Example homepage](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-homepage.png)
 
 We use `withInitAction()` to add the following initialization to our components:
  1. `TimelinePage` loads a list of posts. After that is completed, it will call `prepareComponent(Post, { id: postId })` for each post
