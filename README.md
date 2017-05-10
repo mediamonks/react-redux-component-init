@@ -50,7 +50,7 @@ We use `withInitAction()` to add the following initialization to our components:
  - `HomeTimeline` loads a list of posts. It now has a couple of post ids and calls `prepareComponent(Post, { id: postId })` for each post
  - `Post` loads some detail data to display the itself
 
-![Example prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-prepare-tree.png)
+![Example prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-prepare-tree.png&v=2)
 
 _NOTE: In this example, the list of posts are loaded separately from the post detail data. In another application this might be a single call_
 
