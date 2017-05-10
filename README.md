@@ -1,4 +1,4 @@
-# react-redux-init
+# react-redux-component-init
 A library to manage react component initialization in isomorphic applications using [Redux.js](http://redux.js.org).
 
 ## When to use
@@ -53,10 +53,10 @@ _NOTE: this is just an example where the comment data is loaded in a separate ap
 Make sure you have an existing setup with the prerequisites listed above.
 
 #### Attach the reducer
-Attach the `react-redux-init` reducer to your Redux store under the `init` key. The easiest way to do this is by using [Redux combineReducers()](http://redux.js.org/docs/api/combineReducers.html):
+Attach the `react-redux-component-init` reducer to your Redux store under the `init` key. The easiest way to do this is by using [Redux combineReducers()](http://redux.js.org/docs/api/combineReducers.html):
 ```
 import { combineReducers, createStore } from 'redux';
-import { initReducer as init } from 'react-redux-init';
+import { initReducer as init } from 'react-redux-component-init';
 
 const mainReducer = combineReducers({
   init: initReducer,
@@ -69,7 +69,7 @@ Please note: it is recommended to attach the reducer to the `init` key, but it i
 #### Server side page rendering
 In the function that renders your page on the server, call `prepareComponent` with the page components you will render before you render your page. The example below is using [express](https://expressjs.com/) and [react-router](https://github.com/ReactTraining/react-router) 3, but these are not required.
 ```
-import { prepareComponents } from 'react-redux-init';
+import { prepareComponents } from 'react-redux-component-init';
 import { match, RouterContext } from 'react-router';
 import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
@@ -95,7 +95,7 @@ function renderPage(req, res) {
 #### Set initMode on client
 On the client side of your application you should switch the initMode to `MODE_INIT_SELF` **after the first render**.
 ```
-import { setInitMode, MODE_INIT_SELF } from 'react-redux-init';
+import { setInitMode, MODE_INIT_SELF } from 'react-redux-component-init';
 ...
 store.dispatch(setInitMode(MODE_INIT_SELF));
 ```

@@ -7,7 +7,7 @@ import createPrepareKey from './utils/createPrepareKey';
 import { MODE_PREPARE } from './initMode';
 
 /**
- * Reducer function that manages the state for `react-redux-init`. This reducer should
+ * Reducer function that manages the state for `react-redux-component-init`. This reducer should
  * be included using Redux's `combineReducers()` under the `init` key in the root of
  * the store state.
  */

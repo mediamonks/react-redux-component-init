@@ -1,5 +1,5 @@
 /**
- * The possible modes that `react-redux-init` can operate under. One is designed for
+ * The possible modes that `react-redux-component-init` can operate under. One is designed for
  * the client side, the other for server side rendering. This mode affects
  * the behavior of the entire module.
  */

@@ -1,4 +1,4 @@
-const prefix = '@@react-redux-init/';
+const prefix = '@@react-redux-component-init/';
 
 /**
  * Action type for switching the initMode of the module. See `initMode`
