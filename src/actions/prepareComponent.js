@@ -11,14 +11,14 @@ import initComponent from './initComponent';
  * @param {react.Component} Component The component to prepare. If the component was not
  * wrapped in `withInitAction`, this action will have no effect and returns a Promise that
  * resolves immediately.
- * @param {object} props The values of `initProps` to initialize this component with. These
+ * @param {object} [props={}] The values of `initProps` to initialize this component with. These
  * values should be the same as the props that the component will eventually mount with. Omitting
  * one of the `initProps` values configured in `withInitAction()` will result in an error.
  * @returns {function} A thunk function that should be passed directly to the Redux `dispatch`
  * function.
  * @example dispatch(prepareComponent(Comment, { commentId: 5 }));
  */
-export default (Component, props) =>
+export default (Component, props = {}) =>
   (dispatch, getState) => {
     // unwrap other HoC if no initConfig is found
     while (!Component.initConfig && Component.WrappedComponent) {
