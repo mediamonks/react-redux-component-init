@@ -111,7 +111,7 @@ export default (p1, p2, p3) => {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
         if (initSelf !== INIT_SELF_NEVER) {
-          this.props.__initComponent(this, initValues, prepareKey).catch(this.handleInitError);
+          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
         }
       }
 
@@ -122,10 +122,10 @@ export default (p1, p2, p3) => {
 
         if (initProps.length && reinitialize) {
           const { __componentInitState: { initValues }, __initComponent } = this.props;
-          const { __componentInitState: { initValues: newInitValues } } = newProps;
+          const { __componentInitState: { initValues: newInitValues, prepareKey } } = newProps;
 
           if (initValues !== newInitValues) {
-            __initComponent(this, newInitValues).catch(this.handleInitError);
+            __initComponent(newInitValues, prepareKey).catch(this.handleInitError);
           }
         }
       }
@@ -170,7 +170,11 @@ export default (p1, p2, p3) => {
           };
         };
       },
-      { __initComponent: initComponent },
+      dispatch => ({
+        __initComponent: (initValues, prepareKey, initOptions) => dispatch(
+          initComponent(WithInit, initValues, prepareKey, initOptions),
+        ),
+      }),
     )(WithInit);
 
     ConnectedWithInit.initConfig = initConfig;
