@@ -26,16 +26,16 @@ export default (state = {
       if (action.payload.isPrepare) {
         return {
           ...state,
-          selfInit: {
-            ...state.selfInit,
+          prepared: {
+            ...state.prepared,
             [action.payload.prepareKey]: action.payload.complete,
           },
         };
       }
       return {
         ...state,
-        prepared: {
-          ...state.prepared,
+        selfInit: {
+          ...state.selfInit,
           [action.payload.prepareKey]: action.payload.complete,
         },
       };
