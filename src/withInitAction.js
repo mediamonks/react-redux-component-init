@@ -172,7 +172,7 @@ export default (p1, p2, p3) => {
       },
       dispatch => ({
         __initComponent: (initValues, prepareKey, initOptions) => dispatch(
-          initComponent(WithInit, initValues, prepareKey, initOptions),
+          initComponent(ConnectedWithInit, initValues, prepareKey, initOptions),
         ),
       }),
     )(WithInit);
