@@ -4,3 +4,8 @@ node_modules
 
 # .npmignore
 .gitignore
+.npmignore
+.eslint*
+.babelrc
+tests
+docs
