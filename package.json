@@ -1,6 +1,6 @@
 {
   "name": "react-redux-component-init",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A library to manage async cpmponent initialization in isomorphic React/Redux applications with server-side rendering",
   "main": "./lib/index.js",
   "scripts": {
