@@ -109,30 +109,4 @@ describe('withInitAction', () => {
     )(FooComponent);
     expect(WithInit.initConfig.initProps).toEqual(['a', 'b', 'c']);
   });
-
-  it('throws an error when two components with the same displayName are passed', () => {
-    clearComponentIds();
-    class BarComponent extends Component {
-      render() {
-        return <noscript />;
-      }
-    }
-
-    class BarComponent2 extends Component {
-      static displayName = 'BarComponent';
-
-      render() {
-        return <noscript />;
-      }
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    const WithInit = withInitAction(() => Promise.resolve())(BarComponent);
-    expect(() => {
-      // eslint-disable-next-line no-unused-vars
-      const WithInit2 = withInitAction(
-        () => Promise.resolve(),
-      )(BarComponent2);
-    }).toThrow();
-  });
 });
