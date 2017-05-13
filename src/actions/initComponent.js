@@ -42,7 +42,7 @@ export default (
     componentId,
     initProps,
     initAction,
-    options: { onError, getInitState, initSelf },
+    options: { onError, getInitState, initSelf, lazy },
   } = Component.initConfig;
 
   const initState = getInitState(getState());
@@ -52,7 +52,7 @@ export default (
   const { mode, prepared } = initState;
 
   if (
-    ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER)) ||
+    (((mode === MODE_INIT_SELF) || lazy) && (initSelf !== INIT_SELF_NEVER)) ||
     (isPrepare && (typeof prepared[prepareKey] === 'undefined'))
   ) {
     const initPropsObj = propNameValuesToObject(initProps, initValues);

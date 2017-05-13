@@ -110,7 +110,15 @@ export default (p1, p2, p3) => {
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
-        if (initSelf !== INIT_SELF_NEVER) {
+        if (initSelf !== INIT_SELF_NEVER && !lazy) {
+          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
+        }
+      }
+
+      componentDidMount() {
+        if (lazy) {
+          const { initValues, prepareKey } = this.props.__componentInitState;
+
           this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
         }
       }
