@@ -36,12 +36,12 @@ _Note: By default, the component will start rendering even if the `initAction` h
 ### The prepare tree
 As described in "initialization lifecycle" above, we need to dispatch `prepareComponent()` for each component on the page before page render. But how do we know in advance which components will be on our page? The trick is to configure our page component initialization to dispatch `prepareComponent()` for each direct child component with an `initAction`. We configure the child component initialization to dispatch `prepareComponent()` for their children, and so on. This way, we only have to dispatch `prepareComponent()` on the page component we want to render and it will recursively prepare its descendants.
 
-![The prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/prepare-tree.png)
+![The prepare tree](https://github.com/mediamonks/react-redux-component-init/raw/develop/docs/assets/prepare-tree.png)
 
 #### Example
 Below is an example of a `HomePage` component layout. We will need to load the notifications to display in the header, the list of posts, and some detail data for each post.
 
-![Example homepage](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-homepage.png)
+![Example homepage](https://github.com/mediamonks/react-redux-component-init/raw/develop/docs/assets/example-homepage.png)
 
 We use `withInitAction()` to add the following initialization to our components:
  - `Homepage` calls `prepareComponent(Header)` and `prepareComponent(HomeTimeline)`
@@ -50,7 +50,7 @@ We use `withInitAction()` to add the following initialization to our components:
  - `HomeTimeline` loads a list of posts. It now has a couple of post ids and calls `prepareComponent(Post, { id: postId })` for each post
  - `Post` loads some detail data to display the itself
 
-![Example prepare tree](https://github.com/flut1/react-redux-component-init/raw/develop/docs/assets/example-prepare-tree.png?v=3)
+![Example prepare tree](https://github.com/mediamonks/react-redux-component-init/raw/develop/docs/assets/example-prepare-tree.png?v=3)
 
 _NOTE: In this example, the list of posts are loaded separately from the post detail data. In another application this might be a single call_
 

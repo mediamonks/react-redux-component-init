@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flut1/react-redux-component-init.git"
+    "url": "git+https://github.com/mediamonks/react-redux-component-init.git"
   },
   "keywords": [
     "react",
@@ -28,9 +28,9 @@
   "author": "Floris Bernard",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/flut1/react-redux-component-init/issues"
+    "url": "https://github.com/mediamonks/react-redux-component-init/issues"
   },
-  "homepage": "https://github.com/flut1/react-redux-component-init#readme",
+  "homepage": "https://github.com/mediamonks/react-redux-component-init#readme",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
