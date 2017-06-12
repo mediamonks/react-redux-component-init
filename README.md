@@ -115,7 +115,7 @@ Higher-order component that adds initialization configuration to an existing com
    - Component preparation using `withPrepare()` only executes once for each combination of these props. Duplicate calls (with the same `Component` and the same values for `initProps`) will be ignored.
    - By default, if these props change value on the client, the component will "re-initialize". See `options` below
    - Dot notation can be used to define a subset of an object prop. For example, when using `['foo.bar', 'foo.foobar']` the `initAction`  will only get the properties `bar` and `foobar` on the `foo` prop.
- - `initAction` `{(dispatch, initValues) => Promise}` This is the actual initialization function. This function **must return a Promise** that resolves when initialization is complete. It receives the following arguments:
+ - `initAction` `{(props, dispatch, getState) => Promise}` This is the actual initialization function. This function **must return a Promise** that resolves when initialization is complete. It receives the following arguments:
    - `props` `{object}` An object containing values of the props defined in `initProps`. If `initProps` is not defined, this is an empty object.
    - `dispatch` `{function}` The Redux dispatch function. This can be used to dispatch initialization actions or dispatch the `withPrepare()` action for child components
    - `getState` `{function}` The Redux getState function.
