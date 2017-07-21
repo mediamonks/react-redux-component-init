@@ -72,7 +72,7 @@ export default (p1, p2, p3) => {
     onError,
     getInitState = defaultGetInitState,
     initSelf = INIT_SELF_ASYNC,
-    lazy = false,
+    allowLazy = false,
   } = options;
 
   return (WrappedComponent) => {
@@ -89,7 +89,7 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
-      options: { reinitialize, onError, getInitState, initSelf, lazy },
+      options: { reinitialize, onError, getInitState, initSelf, allowLazy },
     };
 
     class WithInit extends Component {
@@ -111,13 +111,13 @@ export default (p1, p2, p3) => {
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
-        if (initSelf !== INIT_SELF_NEVER && !lazy) {
+        if (initSelf !== INIT_SELF_NEVER && !allowLazy) {
           this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
         }
       }
 
       componentDidMount() {
-        if (lazy) {
+        if (allowLazy) {
           const { initValues, prepareKey } = this.props.__componentInitState;
 
           this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);

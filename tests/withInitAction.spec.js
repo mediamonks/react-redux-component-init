@@ -60,7 +60,7 @@ describe('withInitAction', () => {
       it('sets the initSelf option', () => {
         expect(WithInit.initConfig.initSelf).toBe(INIT_SELF_BLOCKING);
       });
-      it('sets the lazy option', () => {
+      it('sets the allowLazy option', () => {
         expect(WithInit.initConfig.allowLazy).toBe(true);
       });
       it('sets the getInitState option', () => {
