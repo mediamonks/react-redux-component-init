@@ -50,11 +50,11 @@ describe('initComponent', () => {
               expect(actions).toEqual([
                 {
                   type: INIT_COMPONENT,
-                  payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+                  payload: { complete: false, isPrepare: false, prepareKey: 'MockComponent[]' },
                 },
                 {
                   type: INIT_COMPONENT,
-                  payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+                  payload: { complete: true, isPrepare: false, prepareKey: 'MockComponent[]' },
                 },
               ]);
             });
