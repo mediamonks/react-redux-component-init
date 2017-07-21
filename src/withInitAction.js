@@ -31,10 +31,11 @@ const componentIds = [];
  * @param {boolean} [options.reinitialize=true] If true, will call `initAction` again if any of the
  * props defined in `initProps` change after mount. This change is checked using
  * strict equality (===)
- * @param {boolean} [options.lazy=false] If true, all calls to `prepareComponent()` will be ignored
- * and `initAction` will be performed on `componentDidMount` on the client as if it wasn't
- * mounted on first render. This can be used to do non-critical initialization, like loading data
- * for components that display below the fold.
+ * @param {boolean} [options.allowLazy=false] If `true`, no error will be thrown when the component
+ * is mounted without being prepared using `prepareComponent()` first. Instead, the `initAction`
+ * will be performed on `componentDidMount` on the client, as if it wasn't mounted on first render.
+ * This can be used to do non-critical initialization, like loading data for components that
+ * display below the fold.
  * @param {string} [options.initSelf="ASYNC"] A string that indicates the behavior for
  * initialization on the client (`initMode == MODE_INIT_SELF`). Possible values:
  * - "ASYNC" the component will render immediately, even if `initAction` is still pending.
@@ -47,7 +48,7 @@ const componentIds = [];
  *   further re-initialization.
  * - "UNMOUNT" same as "BLOCKING" but it will also unmount the component during re-initialization.
  * - "NEVER" will only initialize on the server (initMode == MODE_PREPARE). Initialization will
- *   be skipped on the client. This is the opposite of setting `lazy: true`
+ *   be skipped on the client.
  * @param {function} [options.onError] Error handler for errors that occur while executing
  * initAction. If given, errors will be swallowed.
  * @param {function} [options.getInitState] A function that takes the Redux state and returns
@@ -71,7 +72,7 @@ export default (p1, p2, p3) => {
     onError,
     getInitState = defaultGetInitState,
     initSelf = INIT_SELF_ASYNC,
-    lazy = false,
+    allowLazy = false,
   } = options;
 
   return (WrappedComponent) => {
@@ -88,7 +89,7 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
-      options: { reinitialize, onError, getInitState, initSelf, lazy },
+      options: { reinitialize, onError, getInitState, initSelf, allowLazy },
     };
 
     class WithInit extends Component {
@@ -110,13 +111,13 @@ export default (p1, p2, p3) => {
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
-        if (initSelf !== INIT_SELF_NEVER && !lazy) {
+        if (initSelf !== INIT_SELF_NEVER && !allowLazy) {
           this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
         }
       }
 
       componentDidMount() {
-        if (lazy) {
+        if (allowLazy) {
           const { initValues, prepareKey } = this.props.__componentInitState;
 
           this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);

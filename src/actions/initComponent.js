@@ -42,7 +42,7 @@ export default (
     componentId,
     initProps,
     initAction,
-    options: { onError, getInitState, initSelf, lazy },
+    options: { onError, getInitState, initSelf, allowLazy },
   } = Component.initConfig;
 
   const initState = getInitState(getState());
@@ -51,10 +51,15 @@ export default (
   }
   const { mode, prepared } = initState;
 
-  if (
-    (((mode === MODE_INIT_SELF) || lazy) && (initSelf !== INIT_SELF_NEVER)) ||
+  let shouldInitialize = (
+    ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER)) ||
     (isPrepare && (typeof prepared[prepareKey] === 'undefined'))
-  ) {
+  );
+  if ((mode === MODE_PREPARE) && !isPrepare && allowLazy && !prepared[prepareKey]) {
+    shouldInitialize = true;
+  }
+
+  if (shouldInitialize) {
     const initPropsObj = propNameValuesToObject(initProps, initValues);
 
     dispatch({
@@ -97,7 +102,7 @@ export default (
 
         return result;
       });
-  } else if (mode === MODE_PREPARE && !isPrepare) {
+  } else if (mode === MODE_PREPARE && !isPrepare && !allowLazy) {
     if (typeof prepared[prepareKey] === 'undefined') {
       const initPropsObj = propNameValuesToObject(initProps, initValues);
       throw new Error(`Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(initPropsObj)}`);

@@ -13,13 +13,147 @@ describe('initComponent', () => {
   describe('when initMode === MODE_PREPARE', () => {
     describe('with no isPrepare option given', () => {
       describe('and no prepare state is present', () => {
-        clearComponentIds();
-        const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-        const MockComponent = () => <noscript />;
-        const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
+        describe('with no allowLazy option on the component', () => {
+          clearComponentIds();
+          const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+          const MockComponent = () => <noscript />;
+          const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
 
-        it('throws an error', () => {
-          expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).toThrow();
+          it('throws an error', () => {
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).toThrow();
+          });
+        });
+        describe('with { allowLazy: true } on the component', () => {
+          it('does not throw an error', () => {
+            clearComponentIds();
+            const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => Promise.resolve(),
+              { allowLazy: true },
+            )(MockComponent);
+
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+          });
+
+          it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
+            clearComponentIds();
+            const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => Promise.resolve(),
+              { allowLazy: true },
+            )(MockComponent);
+
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+              const actions = store.getActions();
+              expect(actions).toEqual([
+                {
+                  type: INIT_COMPONENT,
+                  payload: { complete: false, isPrepare: false, prepareKey: 'MockComponent[]' },
+                },
+                {
+                  type: INIT_COMPONENT,
+                  payload: { complete: true, isPrepare: false, prepareKey: 'MockComponent[]' },
+                },
+              ]);
+            });
+          });
+        });
+      });
+      describe('and the preparation has completed', () => {
+        describe('with no allowLazy option on the component', () => {
+          it('does not throw an error', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {
+                'MockComponent[]': true,
+              },
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
+
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+          });
+
+          it('does not dispatch INIT_COMPONENT', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {
+                'MockComponent[]': true,
+              },
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
+
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+              const actions = store.getActions();
+              return expect(actions).toEqual([]);
+            });
+          });
+        });
+
+        describe('with { allowLazy: true } on the component', () => {
+          it('does not throw an error', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {
+                'MockComponent[]': true,
+              },
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => Promise.resolve(),
+              { allowLazy: true },
+            )(MockComponent);
+
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+          });
+
+          it('does not dispatch INIT_COMPONENT', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {
+                'MockComponent[]': true,
+              },
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => Promise.resolve(),
+              { allowLazy: true },
+            )(MockComponent);
+
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+              const actions = store.getActions();
+              return expect(actions).toEqual([]);
+            });
+          });
+
+          it('does not call the initAction', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {
+                'MockComponent[]': true,
+              },
+            } });
+            const MockComponent = () => <noscript />;
+            const mockInitAction = jest.fn(
+              () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
+            );
+            const MockWithInit = withInitAction(
+              mockInitAction,
+              { allowLazy: true },
+            )(MockComponent);
+
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(
+              () => expect(mockInitAction.mock.calls.length).toBe(0),
+            );
+          });
         });
       });
       describe('and the preparation in state is still pending', () => {
@@ -57,64 +191,94 @@ describe('initComponent', () => {
     });
     describe('with {isPrepare: true}', () => {
       describe('and no prepare state is present', () => {
-        it('dispatches INIT_COMPONENT with { completed: false }', () => {
-          clearComponentIds();
-          const store = mockStore({ init: {
-            mode: MODE_PREPARE,
-            prepared: {},
-          } });
-          const MockComponent = () => <noscript />;
-          const MockWithInit = withInitAction(
-            () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
-          )(MockComponent);
-          store.dispatch(initComponent(
-            MockWithInit,
-            [],
-            'MockComponent[]',
-            { isPrepare: true },
-          ));
+        describe('with no allowLazy option on the component', () => {
+          it('dispatches INIT_COMPONENT with { completed: false }', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {},
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
+            )(MockComponent);
+            store.dispatch(initComponent(
+              MockWithInit,
+              [],
+              'MockComponent[]',
+              { isPrepare: true },
+            ));
 
-          const actions = store.getActions();
-          expect(actions).toEqual([
-            {
-              type: INIT_COMPONENT,
-              payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
-            },
-          ]);
-        });
-
-        it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
-          clearComponentIds();
-          const store = mockStore({ init: {
-            mode: MODE_PREPARE,
-            prepared: {},
-          } });
-          const MockComponent = () => <noscript />;
-          const mockInitAction = jest.fn(
-            () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
-          );
-          const MockWithInit = withInitAction(mockInitAction)(MockComponent);
-          const initPromise = store.dispatch(initComponent(
-            MockWithInit,
-            [],
-            'MockComponent[]',
-            { isPrepare: true },
-          ));
-
-          return initPromise.then(() => {
             const actions = store.getActions();
             expect(actions).toEqual([
               {
                 type: INIT_COMPONENT,
                 payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
               },
+            ]);
+          });
+
+          it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {},
+            } });
+            const MockComponent = () => <noscript />;
+            const mockInitAction = jest.fn(
+              () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
+            );
+            const MockWithInit = withInitAction(mockInitAction)(MockComponent);
+            const initPromise = store.dispatch(initComponent(
+              MockWithInit,
+              [],
+              'MockComponent[]',
+              { isPrepare: true },
+            ));
+
+            return initPromise.then(() => {
+              const actions = store.getActions();
+              expect(actions).toEqual([
+                {
+                  type: INIT_COMPONENT,
+                  payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+                },
+                {
+                  type: INIT_COMPONENT,
+                  payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+                },
+              ]);
+
+              expect(mockInitAction.mock.calls.length).toBe(1);
+            });
+          });
+        });
+        describe('with { allowLazy: true } on the component', () => {
+          it('dispatches INIT_COMPONENT with { completed: false }', () => {
+            clearComponentIds();
+            const store = mockStore({ init: {
+              mode: MODE_PREPARE,
+              prepared: {},
+            } });
+            const MockComponent = () => <noscript />;
+            const MockWithInit = withInitAction(
+              () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
+              { allowLazy: true },
+            )(MockComponent);
+            store.dispatch(initComponent(
+              MockWithInit,
+              [],
+              'MockComponent[]',
+              { isPrepare: true },
+            ));
+
+            const actions = store.getActions();
+            expect(actions).toEqual([
               {
                 type: INIT_COMPONENT,
-                payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+                payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
               },
             ]);
-
-            expect(mockInitAction.mock.calls.length).toBe(1);
           });
         });
       });
