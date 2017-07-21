@@ -97,7 +97,7 @@ describe('prepareComponent', () => {
         },
       ]);
     }));
-    it('should cll the initAction', () => preparePromise.then(
+    it('should call the initAction', () => preparePromise.then(
       expect(mockInitAction.mock.calls.length).toBe(1),
     ));
   });

@@ -29,7 +29,7 @@ export default (Component, props = {}) =>
       const {
         componentId,
         initProps,
-        options: { allowLazy, getInitState },
+        options: { getInitState },
       } = Component.initConfig;
 
       const initState = getInitState(getState());
@@ -47,13 +47,11 @@ export default (Component, props = {}) =>
           }
         });
 
-        if (!allowLazy) {
-          const prepareKey = createPrepareKey(componentId, initValues);
+        const prepareKey = createPrepareKey(componentId, initValues);
 
-          return dispatch(initComponent(Component, initValues, prepareKey, {
-            isPrepare: true,
-          }));
-        }
+        return dispatch(initComponent(Component, initValues, prepareKey, {
+          isPrepare: true,
+        }));
       }
     }
 
