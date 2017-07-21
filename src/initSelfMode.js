@@ -28,7 +28,7 @@ export const INIT_SELF_UNMOUNT = 'UNMOUNT';
 
 /**
  * Only execute initAction on the server (initMode == MODE_PREPARE). Initialization will
- * be skipped on the client. This is the opposite of setting `lazy: true` in `withInitAction()`
+ * be skipped on the client.
  * @type {string}
  */
 export const INIT_SELF_NEVER = 'NEVER';

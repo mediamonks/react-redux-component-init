@@ -42,7 +42,7 @@ describe('prepareComponent', () => {
       ]);
     }));
   });
-  describe('with a lazy component', () => {
+  describe('with a component configured with allowLazy', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
     const MockComponent = () => <script />;
@@ -50,16 +50,25 @@ describe('prepareComponent', () => {
     const MockWithInit = withInitAction(
       mockInitAction,
       {
-        lazy: true,
+        allowLazy: true,
       },
     )(MockComponent);
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should not call the initAction', () => preparePromise.then(
-      expect(mockInitAction.mock.calls.length).toBe(0),
+    it('should call the initAction', () => preparePromise.then(
+      expect(mockInitAction.mock.calls.length).toBe(1),
     ));
-    it('should not dispatch INIT_COMPONENT actions', () => preparePromise.then(
-      expect(store.getActions()).toEqual([]),
+    it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(
+      expect(store.getActions()).toEqual([
+        {
+          type: INIT_COMPONENT,
+          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+        },
+        {
+          type: INIT_COMPONENT,
+          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+        },
+      ]),
     ));
   });
   describe('with a component wrapped in connect()', () => {
@@ -88,7 +97,7 @@ describe('prepareComponent', () => {
         },
       ]);
     }));
-    it('should cll the initAction', () => preparePromise.then(
+    it('should call the initAction', () => preparePromise.then(
       expect(mockInitAction.mock.calls.length).toBe(1),
     ));
   });

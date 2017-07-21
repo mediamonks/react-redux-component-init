@@ -20,7 +20,7 @@ describe('withInitAction', () => {
         expect(typeof WithInit.initConfig.componentId).toBe('string');
         expect(WithInit.initConfig.componentId).not.toBe('');
       });
-      it('has a lazy option of false', () => expect(WithInit.initConfig.options.lazy).toBe(false));
+      it('has an allowLazy option of false', () => expect(WithInit.initConfig.options.allowLazy).toBe(false));
       it('has an empty array for initProps', () => {
         expect(WithInit.initConfig.initProps).toEqual([]);
       });
@@ -48,7 +48,7 @@ describe('withInitAction', () => {
         {
           reinitialize: false,
           initSelf: INIT_SELF_BLOCKING,
-          lazy: true,
+          allowLazy: true,
           getInitState: getInitStateDummy,
           onError: onErrorDummy,
         },
@@ -60,8 +60,8 @@ describe('withInitAction', () => {
       it('sets the initSelf option', () => {
         expect(WithInit.initConfig.initSelf).toBe(INIT_SELF_BLOCKING);
       });
-      it('sets the lazy option', () => {
-        expect(WithInit.initConfig.lazy).toBe(true);
+      it('sets the allowLazy option', () => {
+        expect(WithInit.initConfig.allowLazy).toBe(true);
       });
       it('sets the getInitState option', () => {
         expect(WithInit.initConfig.getInitState).toBe(getInitStateDummy);
