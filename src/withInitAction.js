@@ -100,6 +100,7 @@ export default (p1, p2, p3) => {
           initValues: PropTypes.arrayOf(PropTypes.any).isRequired,
           prepareKey: PropTypes.string.isRequired,
           initialized: PropTypes.bool.isRequired,
+          selfInitializing: PropTypes.bool.isRequired,
         }).isRequired,
       };
 
@@ -152,8 +153,8 @@ export default (p1, p2, p3) => {
       render() {
         // eslint-disable-next-line no-unused-vars
         const { __componentInitState, __initComponent, __modeInitSelf, ...props } = this.props;
-        const { initialized } = __componentInitState;
-        const isInitializing = (initSelf !== INIT_SELF_NEVER) && __modeInitSelf && !initialized;
+        const { selfInitializing } = __componentInitState;
+        const isInitializing = (initSelf !== INIT_SELF_NEVER) && __modeInitSelf && selfInitializing;
         const cloak = isInitializing && (
           (initSelf === INIT_SELF_UNMOUNT) ||
           ((initSelf === INIT_SELF_BLOCKING) && !this.initializedOnce)

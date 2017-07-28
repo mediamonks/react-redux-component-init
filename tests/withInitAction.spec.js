@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import renderer from 'react-test-renderer';
 
 import withInitAction, { clearComponentIds } from '../src/withInitAction';
+import { MODE_INIT_SELF } from '../src/initMode';
 import { INIT_SELF_ASYNC, INIT_SELF_BLOCKING } from '../src/initSelfMode';
+
+const mockStore = configureMockStore([thunk]);
 
 /* eslint-disable react/prefer-stateless-function, react/no-multi-comp */
 describe('withInitAction', () => {
@@ -69,6 +76,110 @@ describe('withInitAction', () => {
       it('sets the onError option', () => {
         expect(WithInit.initConfig.onError).toBe(onErrorDummy);
       });
+    });
+  });
+
+  describe('with a component that has been prepared', () => {
+    // see issue #17
+    it('does not set an { isInitializing: true } prop', () => {
+      clearComponentIds();
+      class FooComponent extends Component {
+        render() {
+          const { isInitializing } = this.props; // eslint-disable-line react/prop-types
+          return (
+            <div>
+              { isInitializing ? 'initializing' : 'completed' }
+            </div>
+          );
+        }
+      }
+
+      const store = mockStore({ init: {
+        mode: MODE_INIT_SELF,
+        prepared: {
+          'FooComponent[]': true,
+        },
+        selfInit: {},
+      } });
+
+      const WithInit = withInitAction(() => Promise.resolve())(FooComponent);
+      const tree = renderer.create(
+        <Provider store={store}>
+          <WithInit />
+        </Provider>,
+      ).toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+  });
+
+  describe('with a component that has been prepared and is re-initializing', () => {
+    it('sets an { isInitializing: true } prop', () => {
+      clearComponentIds();
+      class FooComponent extends Component {
+        render() {
+          const { isInitializing } = this.props; // eslint-disable-line react/prop-types
+          return (
+            <div>
+              { isInitializing ? 'initializing' : 'completed' }
+            </div>
+          );
+        }
+      }
+
+      const store = mockStore({ init: {
+        mode: MODE_INIT_SELF,
+        prepared: {
+          'FooComponent[]': true,
+        },
+        selfInit: {
+          'FooComponent[]': false,
+        },
+      } });
+
+      const WithInit = withInitAction(() => Promise.resolve())(FooComponent);
+      const tree = renderer.create(
+        <Provider store={store}>
+          <WithInit />
+        </Provider>,
+      ).toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+  });
+
+  describe('with a component that has been prepared and has completed re-initializing', () => {
+    it('does not set an { isInitializing: true } prop', () => {
+      clearComponentIds();
+      class FooComponent extends Component {
+        render() {
+          const { isInitializing } = this.props; // eslint-disable-line react/prop-types
+          return (
+            <div>
+              { isInitializing ? 'initializing' : 'completed' }
+            </div>
+          );
+        }
+      }
+
+      const store = mockStore({ init: {
+        mode: MODE_INIT_SELF,
+        prepared: {
+          'FooComponent[]': true,
+        },
+        selfInit: {
+          'FooComponent[]': true,
+        },
+      } });
+
+      const WithInit = withInitAction(() => Promise.resolve())(FooComponent);
+      const tree = renderer.create(
+        <Provider store={store}>
+          <WithInit />
+        </Provider>,
+      ).toJSON();
+
+      expect(tree).toMatchSnapshot();
     });
   });
 

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withInitAction with a component that has been prepared and has completed re-initializing does not set an { isInitializing: true } prop 1`] = `
+<div>
+  completed
+</div>
+`;
+
+exports[`withInitAction with a component that has been prepared and is re-initializing sets an { isInitializing: true } prop 1`] = `
+<div>
+  initializing
+</div>
+`;
+
+exports[`withInitAction with a component that has been prepared does not set an { isInitializing: true } prop 1`] = `
+<div>
+  completed
+</div>
+`;
