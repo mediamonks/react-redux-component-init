@@ -18,7 +18,7 @@ exports[`withInitAction with a component that has been prepared does not set an 
 </div>
 `;
 
-exports[`withInitAction with a component that has been prepared with { initSelf: INIT_SELF_BLOCKING } option should mount the component 1`] = `
+exports[`withInitAction with a component that has been prepared with { initSelf: INIT_SELF_BLOCKING }, MODE_INIT_SELF and no selfInit state should not mount the component 1`] = `
 <div>
   foo is mounted!
 </div>

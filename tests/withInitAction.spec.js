@@ -112,8 +112,8 @@ describe('withInitAction', () => {
       expect(tree).toMatchSnapshot();
     });
 
-    describe('with { initSelf: INIT_SELF_BLOCKING } option', () => {
-      it('should mount the component', () => {
+    describe('with { initSelf: INIT_SELF_BLOCKING }, MODE_INIT_SELF and no selfInit state', () => {
+      it('should not mount the component', () => {
         clearComponentIds();
 
         const FooComponent = () => (
