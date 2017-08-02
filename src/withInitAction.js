@@ -99,8 +99,7 @@ export default (p1, p2, p3) => {
         __componentInitState: PropTypes.shape({
           initValues: PropTypes.arrayOf(PropTypes.any).isRequired,
           prepareKey: PropTypes.string.isRequired,
-          selfInitialized: PropTypes.bool.isRequired,
-          selfInitializing: PropTypes.bool.isRequired,
+          selfInitState: PropTypes.bool,
           isPrepared: PropTypes.bool.isRequired,
         }).isRequired,
       };
@@ -136,8 +135,8 @@ export default (p1, p2, p3) => {
       }
 
       componentWillReceiveProps(newProps) {
-        const { __componentInitState: { selfInitialized } } = newProps;
-        if (selfInitialized) {
+        const { __componentInitState: { selfInitState } } = newProps;
+        if (selfInitState) {
           this.setState(() => ({
             initializedOnce: true,
           }));
@@ -164,8 +163,10 @@ export default (p1, p2, p3) => {
       render() {
         // eslint-disable-next-line no-unused-vars
         const { __componentInitState, __initComponent, __modeInitSelf, ...props } = this.props;
-        const { selfInitializing } = __componentInitState;
-        const isInitializing = (initSelf !== INIT_SELF_NEVER) && __modeInitSelf && selfInitializing;
+        const { selfInitState, isPrepared } = __componentInitState;
+
+        const isInitializing = __modeInitSelf ? !selfInitState : (allowLazy && !isPrepared);
+
         const cloak = isInitializing && (
           (initSelf === INIT_SELF_UNMOUNT) ||
           ((initSelf === INIT_SELF_BLOCKING) && !this.state.initializedOnce)

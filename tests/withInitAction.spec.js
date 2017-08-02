@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 
 import withInitAction, { clearComponentIds } from '../src/withInitAction';
-import { MODE_INIT_SELF } from '../src/initMode';
+import { MODE_INIT_SELF, MODE_PREPARE } from '../src/initMode';
 import { INIT_SELF_ASYNC, INIT_SELF_BLOCKING } from '../src/initSelfMode';
 
 const mockStore = configureMockStore([thunk]);
@@ -79,9 +79,44 @@ describe('withInitAction', () => {
     });
   });
 
-  describe('with a component that has been prepared', () => {
+  describe('with a component that has been prepared and no initSelf state and initMode === MODE_PREPARE', () => {
     // see issue #17
     it('does not set an { isInitializing: true } prop', () => {
+      clearComponentIds();
+      class FooComponent extends Component {
+        render() {
+          const { isInitializing } = this.props; // eslint-disable-line react/prop-types
+          return (
+            <div>
+              { isInitializing ? 'initializing' : 'completed' }
+            </div>
+          );
+        }
+      }
+
+      const store = mockStore({ init: {
+        mode: MODE_PREPARE,
+        prepared: {
+          'FooComponent[]': true,
+        },
+        selfInit: {},
+      } });
+
+      const WithInit = withInitAction(() => Promise.resolve())(FooComponent);
+      const tree = renderer.create(
+        <Provider store={store}>
+          <WithInit />
+        </Provider>,
+      ).toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+  });
+
+
+  describe('with a component with no initSelf state and initMode === MODE_INIT_SELF', () => {
+    // See issue #19
+    it('sets an { isInitializing: true } prop', () => {
       clearComponentIds();
       class FooComponent extends Component {
         render() {
@@ -110,40 +145,6 @@ describe('withInitAction', () => {
       ).toJSON();
 
       expect(tree).toMatchSnapshot();
-    });
-
-    describe('with { initSelf: INIT_SELF_BLOCKING }, MODE_INIT_SELF and no selfInit state', () => {
-      it('should not mount the component', () => {
-        clearComponentIds();
-
-        const FooComponent = () => (
-          <div>
-            foo is mounted!
-          </div>
-        );
-
-        const store = mockStore({ init: {
-          mode: MODE_INIT_SELF,
-          prepared: {
-            'FooComponent[]': true,
-          },
-          selfInit: {},
-        } });
-
-        const WithInit = withInitAction(
-          () => Promise.resolve(),
-          {
-            initSelf: INIT_SELF_BLOCKING,
-          },
-        )(FooComponent);
-        const tree = renderer.create(
-          <Provider store={store}>
-            <WithInit />
-          </Provider>,
-        ).toJSON();
-
-        expect(tree).toMatchSnapshot();
-      });
     });
   });
 

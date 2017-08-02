@@ -60,8 +60,7 @@ export const createComponentInitStateSelector = initConfig => createSelector(
   ({ prepareKey, initValues }, selfInit, prepared) => ({
     prepareKey,
     initValues,
-    selfInitializing: (selfInit[prepareKey] === false),
-    selfInitialized: !!selfInit[prepareKey],
+    selfInitState: selfInit[prepareKey],
     isPrepared: !!prepared[prepareKey],
   }),
 );
