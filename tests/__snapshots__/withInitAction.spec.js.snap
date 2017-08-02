@@ -12,14 +12,14 @@ exports[`withInitAction with a component that has been prepared and is re-initia
 </div>
 `;
 
-exports[`withInitAction with a component that has been prepared and no initSelf state and initMode === MODE_INIT_SELF sets an { isInitializing: true } prop 1`] = `
-<div>
-  initializing
-</div>
-`;
-
 exports[`withInitAction with a component that has been prepared and no initSelf state and initMode === MODE_PREPARE does not set an { isInitializing: true } prop 1`] = `
 <div>
   completed
+</div>
+`;
+
+exports[`withInitAction with a component with no initSelf state and initMode === MODE_INIT_SELF sets an { isInitializing: true } prop 1`] = `
+<div>
+  initializing
 </div>
 `;
