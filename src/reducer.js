@@ -56,10 +56,11 @@ const createComponentInitValuesSelector = ({ componentId, initProps }) =>
 export const createComponentInitStateSelector = initConfig => createSelector(
   createComponentInitValuesSelector(initConfig),
   state => state.selfInit,
-  ({ prepareKey, initValues }, selfInit) => ({
+  state => state.prepared,
+  ({ prepareKey, initValues }, selfInit, prepared) => ({
     prepareKey,
     initValues,
-    selfInitializing: (selfInit[prepareKey] === false),
-    initialized: !!selfInit[prepareKey],
+    selfInitState: selfInit[prepareKey],
+    isPrepared: !!prepared[prepareKey],
   }),
 );
