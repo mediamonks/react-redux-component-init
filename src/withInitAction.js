@@ -99,8 +99,9 @@ export default (p1, p2, p3) => {
         __componentInitState: PropTypes.shape({
           initValues: PropTypes.arrayOf(PropTypes.any).isRequired,
           prepareKey: PropTypes.string.isRequired,
-          initialized: PropTypes.bool.isRequired,
+          selfInitialized: PropTypes.bool.isRequired,
           selfInitializing: PropTypes.bool.isRequired,
+          isPrepared: PropTypes.bool.isRequired,
         }).isRequired,
       };
 
@@ -108,9 +109,15 @@ export default (p1, p2, p3) => {
 
       static WrappedComponent = WrappedComponent;
 
-      state = {
-        initializedOnce: false,
-      };
+      constructor(props) {
+        super(props);
+
+        const { __modeInitSelf, __componentInitState: { isPrepared } } = props;
+
+        this.state = {
+          initializedOnce: !__modeInitSelf && isPrepared,
+        };
+      }
 
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
@@ -129,8 +136,8 @@ export default (p1, p2, p3) => {
       }
 
       componentWillReceiveProps(newProps) {
-        const { __componentInitState: { initialized }, __modeInitSelf } = newProps;
-        if (initialized || (!__modeInitSelf && !allowLazy)) {
+        const { __componentInitState: { selfInitialized } } = newProps;
+        if (selfInitialized) {
           this.setState(() => ({
             initializedOnce: true,
           }));
