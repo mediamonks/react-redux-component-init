@@ -1,6 +1,5 @@
 import { MODE_PREPARE } from '../initMode';
 import extractValuesForProps from '../utils/extractValuesForProps';
-import createPrepareKey from '../utils/createPrepareKey';
 
 import initComponent from './initComponent';
 
@@ -29,7 +28,7 @@ export default (Component, props = {}) =>
       const {
         componentId,
         initProps,
-        options: { getInitState },
+        options: { getInitState, getPrepareKey },
       } = Component.initConfig;
 
       const initState = getInitState(getState());
@@ -47,7 +46,7 @@ export default (Component, props = {}) =>
           }
         });
 
-        const prepareKey = createPrepareKey(componentId, initValues);
+        const prepareKey = getPrepareKey(componentId, initValues);
 
         return dispatch(initComponent(Component, initValues, prepareKey, {
           isPrepare: true,

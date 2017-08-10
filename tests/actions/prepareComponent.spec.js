@@ -42,6 +42,30 @@ describe('prepareComponent', () => {
       ]);
     }));
   });
+  describe('with a custom getPrepareKey', () => {
+    clearComponentIds();
+    const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+    const MockComponent = () => <script />;
+    const MockWithInit = withInitAction(
+      () => Promise.resolve(),
+      {
+        getPrepareKey: componentId => `${componentId}!foobar`,
+      },
+    )(MockComponent);
+    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
+    it('should dispatch INIT_COMPONENT actions with the correct prepareKey', () => preparePromise.then(() => {
+      expect(store.getActions()).toEqual([
+        {
+          type: INIT_COMPONENT,
+          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent!foobar' },
+        },
+        {
+          type: INIT_COMPONENT,
+          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent!foobar' },
+        },
+      ]);
+    }));
+  });
   describe('with a component configured with allowLazy', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });

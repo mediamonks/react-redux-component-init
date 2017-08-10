@@ -12,6 +12,7 @@ import {
   INIT_SELF_UNMOUNT,
   INIT_SELF_BLOCKING,
 } from './initSelfMode';
+import createPrepareKey from './utils/createPrepareKey';
 
 const componentIds = [];
 
@@ -51,6 +52,13 @@ const componentIds = [];
  *   be skipped on the client.
  * @param {function} [options.onError] Error handler for errors that occur while executing
  * initAction. If given, errors will be swallowed.
+ * @param {function} [options.getPrepareKey] A function that generates a "prepare key" that will be
+ * used to uniquely identify a component and its props. It has the following signature:
+ * `({string} componentId, {Array} propsArray) => {string}`
+ * This defaults to a function that concatenates the `componentId` and the stringified `propsArray`.
+ * In most cases, this will ensure that a component instance on the server is matched to the
+ * corresponding instance on the client. However, if the props are somehow always different between
+ * server and client, you may use this function to generate a key that omits that difference.
  * @param {function} [options.getInitState] A function that takes the Redux state and returns
  * the init state of the reducer from this module. By default, it is assumed that the state is
  * under the "init" property. If the reducer is included elsewhere, this function can be set
@@ -71,6 +79,7 @@ export default (p1, p2, p3) => {
     reinitialize = true,
     onError,
     getInitState = defaultGetInitState,
+    getPrepareKey = createPrepareKey,
     initSelf = INIT_SELF_ASYNC,
     allowLazy = false,
   } = options;
@@ -89,7 +98,7 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
-      options: { reinitialize, onError, getInitState, initSelf, allowLazy },
+      options: { reinitialize, onError, getInitState, initSelf, allowLazy, getPrepareKey },
     };
 
     class WithInit extends Component {
