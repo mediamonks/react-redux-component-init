@@ -89,7 +89,8 @@ export default (p1, p2, p3) => {
     if (!componentId) {
       throw new Error('withInitAction() HoC requires the wrapped component to have a displayName');
     }
-    if (componentIds.includes(componentId)) {
+    // only warn for unique displayName when we do not have a custom getPrepareKey function
+    if ((getPrepareKey === createPrepareKey) && componentIds.includes(componentId)) {
       console.warn(`Each Component passed to withInitAction() should have a unique displayName. Found duplicate name "${componentId}"`);
     }
     componentIds.push(componentId);
