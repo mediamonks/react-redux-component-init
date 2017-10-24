@@ -87,6 +87,14 @@ export default (
         if (onError && !e.isInvalidReturnError) {
           onError(e);
         } else {
+          dispatch({
+            type: INIT_COMPONENT,
+            payload: {
+              complete: true,
+              isPrepare,
+              prepareKey,
+            },
+          });
           throw e;
         }
       })
