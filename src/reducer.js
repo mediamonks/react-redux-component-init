@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import createShallowArrayCompareSelector from './utils/createShallowArrayCompareSelector';
+import createShallowEqualSelector from './utils/createShallowEqualSelector';
 import { INIT_COMPONENT, SET_INIT_MODE } from './actions/actionTypes';
 import extractValuesForProps from './utils/extractValuesForProps';
 import { MODE_PREPARE } from './initMode';
@@ -43,16 +43,17 @@ export default (state = {
   }
 };
 
-const createComponentInitValuesSelector = ({ componentId, initProps, options: { getPrepareKey } }) =>
-  createShallowArrayCompareSelector(
-    (state, props) => extractValuesForProps(props, initProps),
-    initValues => ({
-      prepareKey: getPrepareKey(componentId, initValues),
-      initValues,
-    }),
-  );
+const createComponentInitValuesSelector = ({
+  componentId, initProps, options: { getPrepareKey },
+}) => createShallowEqualSelector(
+  (state, props) => extractValuesForProps(props, initProps),
+  initValues => ({
+    prepareKey: getPrepareKey(componentId, initValues),
+    initValues,
+  }),
+);
 
-export const createComponentInitStateSelector = initConfig => createSelector(
+const createComponentInitStateHelperSelector = initConfig => createSelector(
   createComponentInitValuesSelector(initConfig),
   state => state.selfInit,
   state => state.prepared,
@@ -60,6 +61,16 @@ export const createComponentInitStateSelector = initConfig => createSelector(
     prepareKey,
     initValues,
     selfInitState: selfInit[prepareKey],
-    isPrepared: !!prepared[prepareKey],
+    preparedState: prepared[prepareKey],
+  }),
+);
+
+export const createComponentInitStateSelector = initConfig => createShallowEqualSelector(
+  createComponentInitStateHelperSelector(initConfig),
+  ({ prepareKey, initValues, selfInitState, preparedState }) => ({
+    prepareKey,
+    initValues,
+    selfInitState,
+    isPrepared: !!preparedState,
   }),
 );
