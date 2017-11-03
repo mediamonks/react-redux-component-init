@@ -43,7 +43,9 @@ export default (state = {
   }
 };
 
-const createComponentInitValuesSelector = ({ componentId, initProps, options: { getPrepareKey } }) =>
+const createComponentInitValuesSelector = ({
+  componentId, initProps, options: { getPrepareKey },
+}) =>
   createShallowArrayCompareSelector(
     (state, props) => extractValuesForProps(props, initProps),
     initValues => ({
