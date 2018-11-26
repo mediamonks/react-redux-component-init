@@ -16,6 +16,10 @@ import createPrepareKey from './utils/createPrepareKey';
 
 const componentIds = [];
 
+const INIT_ACTION_PROP_PREPARED = 'server';
+const INIT_ACTION_PROP_CLIENTONLY = 'client';
+
+
 /**
  * Attaches an initialization action to a component.
  * @param {Array<string>} [initProps] An array of names of props that are relevant for
@@ -66,13 +70,46 @@ const componentIds = [];
  * @returns {function(*)}
  */
 export default (p1, p2, p3) => {
+  let initActionClient = null;
   let initProps = [];
   let initAction = p1;
+  let initActionObjectParam = false;
   let options = p2 || {};
-  if (typeof p1 === 'object') {
+  if (
+    (typeof p1 === 'object') &&
+    (typeof p1[INIT_ACTION_PROP_PREPARED] === 'undefined') &&
+    (typeof p1[INIT_ACTION_PROP_CLIENTONLY] === 'undefined')
+  ) {
     initProps = p1;
     initAction = p2;
     options = p3 || {};
+  }
+
+  if (typeof initAction === 'object') {
+    if (
+      (typeof initAction[INIT_ACTION_PROP_CLIENTONLY] !== 'function') &&
+      (typeof initAction[INIT_ACTION_PROP_PREPARED] !== 'function')
+    ) {
+      throw new Error(
+        `Invalid object passed as initAction to withInitAction. Must have a property "${
+          INIT_ACTION_PROP_CLIENTONLY
+        }" or  "${
+          INIT_ACTION_PROP_PREPARED
+        }"`);
+    }
+
+    initActionObjectParam = true;
+    const initActionPrepared = initAction[INIT_ACTION_PROP_PREPARED] || null;
+    initActionClient = initAction[INIT_ACTION_PROP_CLIENTONLY] || null;
+    initAction = initActionPrepared;
+  } else if (typeof initAction !== 'function') {
+    throw new Error(`Invalid initAction param with type '${
+      typeof initAction
+    }' passed to withInitAction. Expected either a function or an object { [${
+      INIT_ACTION_PROP_CLIENTONLY
+      }]: function, [${
+      INIT_ACTION_PROP_PREPARED
+      }]: function }`);
   }
 
   const {
@@ -99,6 +136,8 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
+      initActionClient,
+      initActionObjectParam,
       options: { reinitialize, onError, getInitState, initSelf, allowLazy, getPrepareKey },
     };
 
@@ -132,7 +171,7 @@ export default (p1, p2, p3) => {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
         if (initSelf !== INIT_SELF_NEVER && !allowLazy) {
-          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
+          this.props.__initComponent(initValues, prepareKey, { caller: 'willMount' }).catch(this.handleInitError);
         }
       }
 
@@ -140,7 +179,7 @@ export default (p1, p2, p3) => {
         if (allowLazy) {
           const { initValues, prepareKey } = this.props.__componentInitState;
 
-          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
+          this.props.__initComponent(initValues, prepareKey, { caller: 'didMount' }).catch(this.handleInitError);
         }
       }
 
@@ -157,7 +196,7 @@ export default (p1, p2, p3) => {
           const { __componentInitState: { initValues: newInitValues, prepareKey } } = newProps;
 
           if (initValues !== newInitValues) {
-            __initComponent(newInitValues, prepareKey).catch(this.handleInitError);
+            __initComponent(newInitValues, prepareKey, { caller: 'willReceiveProps' }).catch(this.handleInitError);
           }
         }
       }

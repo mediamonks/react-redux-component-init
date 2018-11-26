@@ -49,7 +49,7 @@ export default (Component, props = {}) =>
         const prepareKey = getPrepareKey(componentId, initValues);
 
         return dispatch(initComponent(Component, initValues, prepareKey, {
-          isPrepare: true,
+          caller: 'prepareComponent',
         }));
       }
     }

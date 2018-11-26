@@ -11,7 +11,7 @@ const mockStore = configureMockStore([thunk]);
 
 describe('initComponent', () => {
   describe('when initMode === MODE_PREPARE', () => {
-    describe('with no isPrepare option given', () => {
+    describe('with { caller: \'willMount\' }option given', () => {
       describe('and no prepare state is present', () => {
         describe('with no allowLazy option on the component', () => {
           clearComponentIds();
@@ -20,7 +20,7 @@ describe('initComponent', () => {
           const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
 
           it('throws an error', () => {
-            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).toThrow();
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }))).toThrow();
           });
         });
         describe('with { allowLazy: true } on the component', () => {
@@ -33,9 +33,10 @@ describe('initComponent', () => {
               { allowLazy: true },
             )(MockComponent);
 
-            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }))).not.toThrow();
           });
 
+          // TODO: this has caller: didMount. Should be somewhere else
           it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
             clearComponentIds();
             const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
@@ -45,7 +46,7 @@ describe('initComponent', () => {
               { allowLazy: true },
             )(MockComponent);
 
-            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'didMount' })).then(() => {
               const actions = store.getActions();
               expect(actions).toEqual([
                 {
@@ -74,7 +75,7 @@ describe('initComponent', () => {
             const MockComponent = () => <noscript />;
             const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
 
-            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }))).not.toThrow();
           });
 
           it('does not dispatch INIT_COMPONENT', () => {
@@ -88,7 +89,7 @@ describe('initComponent', () => {
             const MockComponent = () => <noscript />;
             const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
 
-            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' })).then(() => {
               const actions = store.getActions();
               return expect(actions).toEqual([]);
             });
@@ -110,7 +111,7 @@ describe('initComponent', () => {
               { allowLazy: true },
             )(MockComponent);
 
-            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).not.toThrow();
+            expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }))).not.toThrow();
           });
 
           it('does not dispatch INIT_COMPONENT', () => {
@@ -127,7 +128,7 @@ describe('initComponent', () => {
               { allowLazy: true },
             )(MockComponent);
 
-            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(() => {
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' })).then(() => {
               const actions = store.getActions();
               return expect(actions).toEqual([]);
             });
@@ -150,7 +151,7 @@ describe('initComponent', () => {
               { allowLazy: true },
             )(MockComponent);
 
-            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')).then(
+            return store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' })).then(
               () => expect(mockInitAction.mock.calls.length).toBe(0),
             );
           });
@@ -168,7 +169,7 @@ describe('initComponent', () => {
         const MockWithInit = withInitAction(() => Promise.resolve())(MockComponent);
 
         it('throws an error', () => {
-          expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'))).toThrow();
+          expect(() => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }))).toThrow();
         });
       });
       describe('and the preparation is done with different props', () => {
@@ -184,12 +185,12 @@ describe('initComponent', () => {
 
         it('throws an error', () => {
           expect(
-            () => store.dispatch(initComponent(MockWithInit, ['bar'], 'MockComponent["bar"]')),
+            () => store.dispatch(initComponent(MockWithInit, ['bar'], 'MockComponent["bar"]', { caller: 'willMount' })),
           ).toThrow();
         });
       });
     });
-    describe('with {isPrepare: true}', () => {
+    describe('with {caller: \'prepareComponent\'}', () => {
       describe('and no prepare state is present', () => {
         describe('with no allowLazy option on the component', () => {
           it('dispatches INIT_COMPONENT with { completed: false }', () => {
@@ -206,7 +207,7 @@ describe('initComponent', () => {
               MockWithInit,
               [],
               'MockComponent[]',
-              { isPrepare: true },
+              { caller: 'prepareComponent' },
             ));
 
             const actions = store.getActions();
@@ -233,7 +234,7 @@ describe('initComponent', () => {
               MockWithInit,
               [],
               'MockComponent[]',
-              { isPrepare: true },
+              { caller: 'prepareComponent' },
             ));
 
             return initPromise.then(() => {
@@ -269,7 +270,7 @@ describe('initComponent', () => {
               MockWithInit,
               [],
               'MockComponent[]',
-              { isPrepare: true },
+              { caller: 'prepareComponent' },
             ));
 
             const actions = store.getActions();
@@ -299,7 +300,7 @@ describe('initComponent', () => {
             MockWithInit,
             [],
             'MockComponent[]',
-            { isPrepare: true },
+            { caller: 'prepareComponent' },
           ))).rejects.toBe('bar'),
         );
       });
@@ -319,7 +320,7 @@ describe('initComponent', () => {
           MockWithInit,
           [],
           'MockComponent[]',
-          { isPrepare: true },
+          { caller: 'prepareComponent' },
         ));
 
         it('resolves the returned promise', () => expect(initPromise).resolves.toBeUndefined());
@@ -348,7 +349,7 @@ describe('initComponent', () => {
           MockWithInit,
           [],
           'MockComponent[]',
-          { isPrepare: true },
+          { caller: 'prepareComponent' },
         ));
 
         it('does not call the initAction', () => initPromise.then(
@@ -375,7 +376,7 @@ describe('initComponent', () => {
         const MockWithInit = withInitAction(
           () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
         )(MockComponent);
-        store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'));
+        store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }));
 
         const actions = store.getActions();
         expect(actions).toEqual([
@@ -397,7 +398,7 @@ describe('initComponent', () => {
         const MockWithInit = withInitAction(
           () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
         )(MockComponent);
-        const initPromise = store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'));
+        const initPromise = store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }));
 
         return initPromise.then(() => {
           const actions = store.getActions();
@@ -414,7 +415,7 @@ describe('initComponent', () => {
         });
       });
 
-      it('dispatches { completed: true } when the action resolves', () => {
+      it('resolves with the resolved value of the action', () => {
         clearComponentIds();
         const store = mockStore({ init: {
           mode: MODE_INIT_SELF,
@@ -425,7 +426,7 @@ describe('initComponent', () => {
         const MockWithInit = withInitAction(
           () => new Promise(resolve => setTimeout(() => resolve('bar'), 40)),
         )(MockComponent);
-        const initPromise = store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]'));
+        const initPromise = store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' }));
 
         return initPromise.then(result => expect(result).toBe('bar'));
       });
@@ -441,7 +442,7 @@ describe('initComponent', () => {
 
     it('runs without error', () => {
       expect(
-        () => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')),
+        () => store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' })),
       ).not.toThrow();
     });
   });
@@ -455,7 +456,7 @@ describe('initComponent', () => {
 
     it('rejects the returned promise', () => {
       expect(
-        store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]')),
+        store.dispatch(initComponent(MockWithInit, [], 'MockComponent[]', { caller: 'willMount' })),
       ).rejects.toBeDefined();
     });
   });
