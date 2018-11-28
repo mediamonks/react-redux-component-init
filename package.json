@@ -10,6 +10,7 @@
     "build": "npm run build:commonjs",
     "build:commonjs": "babel src --out-dir lib",
     "clean": "rimraf lib",
+    "lint": "eslint .",
     "prepublish": "npm run clean && npm run build"
   },
   "repository": {

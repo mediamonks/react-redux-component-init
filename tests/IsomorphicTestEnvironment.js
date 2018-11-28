@@ -12,7 +12,7 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
   this.server = { store: createStore(rootReducer, applyMiddleware(thunk)) };
   this.client = { store: null };
 
-  this.server.render = function () {
+  this.server.render = function renderServer() {
     if (serverStoreState) {
       throw new Error('Store state already set. Did you call IsomorphicTestRenderer.server.render() twice?');
     }
@@ -28,7 +28,7 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
     return { serverTestRenderer };
   };
 
-  this.client.render = function () {
+  this.client.render = function renderOnClient() {
     if (!serverStoreState) {
       throw new Error('No store state from server set. Call IsomorphicTestRenderer.server.render() before running IsomorphicTestRenderer.client.render()');
     }
