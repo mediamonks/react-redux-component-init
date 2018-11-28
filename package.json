@@ -5,6 +5,8 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest",
+    "test:unit": "jest --testPathPattern=\"\\.spec\\.js$\"",
+    "test:integration": "jest --testPathPattern=\"\\.test\\.js$\"",
     "build": "npm run build:commonjs",
     "build:commonjs": "babel src --out-dir lib",
     "clean": "rimraf lib",
