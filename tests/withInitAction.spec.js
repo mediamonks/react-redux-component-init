@@ -39,7 +39,7 @@ describe('withInitAction', () => {
       });
     });
 
-    it('should set the options on the initConfig object', () => {
+    describe('and all options set', () => {
       clearComponentIds();
       class FooComponent extends Component {
         render() {
@@ -62,19 +62,19 @@ describe('withInitAction', () => {
       )(FooComponent);
 
       it('sets the reinitialize option', () => {
-        expect(WithInit.initConfig.reinitialize).toBe(false);
+        expect(WithInit.initConfig.options.reinitialize).toBe(false);
       });
       it('sets the initSelf option', () => {
-        expect(WithInit.initConfig.initSelf).toBe(INIT_SELF_BLOCKING);
+        expect(WithInit.initConfig.options.initSelf).toBe(INIT_SELF_BLOCKING);
       });
       it('sets the allowLazy option', () => {
-        expect(WithInit.initConfig.allowLazy).toBe(true);
+        expect(WithInit.initConfig.options.allowLazy).toBe(true);
       });
       it('sets the getInitState option', () => {
-        expect(WithInit.initConfig.getInitState).toBe(getInitStateDummy);
+        expect(WithInit.initConfig.options.getInitState).toBe(getInitStateDummy);
       });
       it('sets the onError option', () => {
-        expect(WithInit.initConfig.onError).toBe(onErrorDummy);
+        expect(WithInit.initConfig.options.onError).toBe(onErrorDummy);
       });
     });
   });
