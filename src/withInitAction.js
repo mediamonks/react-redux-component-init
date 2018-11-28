@@ -8,7 +8,6 @@ import initComponent from './actions/initComponent';
 import { MODE_INIT_SELF } from './initMode';
 import {
   INIT_SELF_ASYNC,
-  INIT_SELF_NEVER,
   INIT_SELF_UNMOUNT,
   INIT_SELF_BLOCKING,
 } from './initSelfMode';
@@ -170,17 +169,13 @@ export default (p1, p2, p3) => {
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
-        if (initSelf !== INIT_SELF_NEVER && !allowLazy) {
-          this.props.__initComponent(initValues, prepareKey, { caller: 'willMount' }).catch(this.handleInitError);
-        }
+        this.props.__initComponent(initValues, prepareKey, { caller: 'willMount' }).catch(this.handleInitError);
       }
 
       componentDidMount() {
-        if (allowLazy) {
-          const { initValues, prepareKey } = this.props.__componentInitState;
+        const { initValues, prepareKey } = this.props.__componentInitState;
 
-          this.props.__initComponent(initValues, prepareKey, { caller: 'didMount' }).catch(this.handleInitError);
-        }
+        this.props.__initComponent(initValues, prepareKey, { caller: 'didMount' }).catch(this.handleInitError);
       }
 
       componentWillReceiveProps(newProps) {

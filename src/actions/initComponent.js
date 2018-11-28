@@ -56,40 +56,44 @@ export default (
   const { mode, prepared } = initState;
   const isPrepared = typeof prepared[prepareKey] !== 'undefined';
 
-  let shouldCallInitAction = (
-    // initAction exists
-    initAction &&
-    // mounted on the client (after first render)
-    ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER))
-  );
-  let errorNotPrepared = false;
-  let shouldCallInitActionClient = (
-    // initActionClient exists
-    initActionClient &&
-    // mounted on the client (after first render)
-    ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER))
-  );
+  let errorNotPrepared;
+  let shouldCallInitAction;
+  let shouldCallInitActionClient;
 
   switch (caller) {
     case 'prepareComponent':
-      shouldCallInitAction = shouldCallInitAction || (initAction && !isPrepared);
-      shouldCallInitActionClient = false;
       errorNotPrepared = false;
+      shouldCallInitAction = !!initAction && !isPrepared;
+      shouldCallInitActionClient = false;
       break;
     case 'willMount':
       errorNotPrepared = mode === MODE_PREPARE && !allowLazy;
-      break;
-    case 'didMount':
-      shouldCallInitAction = shouldCallInitAction || (initAction && (
+      shouldCallInitAction = !!initAction && (
+        // mounted on the client (after first render), lazy not allowed
+        ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER) && !allowLazy) ||
         // first render, not already prepared, lazy allowed
         ((mode === MODE_PREPARE) && !isPrepared && allowLazy)
-      ));
-      shouldCallInitActionClient = shouldCallInitActionClient || (initActionClient && (
-        // first render, always call this
-        mode === MODE_PREPARE
-      ));
+      );
+      shouldCallInitActionClient = false;
+      break;
+    case 'didMount':
+      errorNotPrepared = false;
+      shouldCallInitAction = !!initAction && (
+        // mounted on the client (after first render), lazy allowed
+        ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER) && allowLazy) ||
+        // first render, not already prepared, lazy allowed
+        ((mode === MODE_PREPARE) && !isPrepared && allowLazy)
+      );
+      shouldCallInitActionClient = initActionClient && (
+        // mounted on the client (after first render)
+        (initSelf !== INIT_SELF_NEVER)
+      );
       break;
     case 'willReceiveProps':
+      // reinitialize is checked in withInitAction
+      errorNotPrepared = false;
+      shouldCallInitAction = !!initAction;
+      shouldCallInitActionClient = !!initActionClient;
       break;
     default:
       throw new Error(`Unexpected value '${caller}' for caller. Expected one of: 'prepareComponent', 'didMount', 'willMount', 'willReceiveProps'`);
@@ -118,7 +122,6 @@ export default (
       prepareKey,
     },
   });
-
 
   return Promise.resolve()
     .then(() => {
