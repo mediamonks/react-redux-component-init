@@ -18,7 +18,6 @@ const componentIds = [];
 const INIT_ACTION_PROP_PREPARED = 'server';
 const INIT_ACTION_PROP_CLIENTONLY = 'client';
 
-
 /**
  * Attaches an initialization action to a component.
  * @param {Array<string>} [initProps] An array of names of props that are relevant for

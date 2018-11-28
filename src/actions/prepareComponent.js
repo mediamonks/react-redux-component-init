@@ -1,5 +1,6 @@
 import { MODE_PREPARE } from '../initMode';
 import extractValuesForProps from '../utils/extractValuesForProps';
+import PrepareValidationError from '../PrepareValidationError';
 
 import initComponent from './initComponent';
 
@@ -42,7 +43,7 @@ export default (Component, props = {}) =>
 
         initValues.forEach((initValue, index) => {
           if (typeof initValue === 'undefined') {
-            throw new ReferenceError(`Component "${componentId}" expected prop "${initProps[index]}" but was not passed to prepareComponent`);
+            throw new PrepareValidationError(`Component "${componentId}" expected prop "${initProps[index]}" but was not passed to prepareComponent`);
           }
         });
 
