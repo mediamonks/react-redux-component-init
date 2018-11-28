@@ -1,5 +1,6 @@
 import propNameValuesToObject from '../utils/propNameValuesToObject';
 import { MODE_INIT_SELF, MODE_PREPARE } from '../initMode';
+import PrepareValidationError from '../PrepareValidationError';
 import { INIT_SELF_NEVER } from '../initSelfMode';
 
 import { INIT_COMPONENT } from './actionTypes';
@@ -97,9 +98,9 @@ export default (
   if (errorNotPrepared) {
     if (typeof prepared[prepareKey] === 'undefined') {
       const initPropsObj = propNameValuesToObject(initProps, initValues);
-      throw new Error(`Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(initPropsObj)}`);
+      throw new PrepareValidationError(`Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(initPropsObj)}`);
     } else if (prepared[prepareKey] === false) {
-      throw new Error(`Expected component "${componentId}" to be prepared but preparation is still pending`);
+      throw new PrepareValidationError(`Expected component "${componentId}" to be prepared but preparation is still pending`);
     }
   }
 

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`isomorphic application rendering a component with initAction function and calling prepareComponent should render the component on the client 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+</div>
+`;
+
+exports[`isomorphic application rendering a component with initAction function and calling prepareComponent should render the component on the server 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+</div>
+`;
