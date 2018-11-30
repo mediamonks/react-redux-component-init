@@ -1,4 +1,4 @@
-import React from 'react';
+/* global expect, describe, it, jest */
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ import withInitAction, { clearComponentIds } from '../../src/withInitAction';
 import prepareComponent from '../../src/actions/prepareComponent';
 import { MODE_PREPARE } from '../../src/initMode';
 import { INIT_COMPONENT } from '../../src/actions/actionTypes';
+import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -14,30 +15,30 @@ describe('prepareComponent', () => {
   describe('with a component without initConfig', () => {
     it('should return a promise that resolves', () => {
       const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-      const MockComponent = () => <script />;
-      return expect(store.dispatch(prepareComponent(MockComponent, {}))).resolves.toBeUndefined();
+      return expect(
+        store.dispatch(prepareComponent(SimpleInitTestComponent, {})),
+      ).resolves.toBeUndefined();
     });
   });
   describe('with a custom getInitState', () => {
     clearComponentIds();
     const store = mockStore({ custom: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const MockWithInit = withInitAction(
       () => Promise.resolve(),
       {
         getInitState: state => state.custom,
       },
-    )(MockComponent);
+    )(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(() => {
       expect(store.getActions()).toEqual([
         {
           type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
         {
           type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
       ]);
     }));
@@ -45,38 +46,39 @@ describe('prepareComponent', () => {
   describe('with a custom getPrepareKey', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const MockWithInit = withInitAction(
       () => Promise.resolve(),
       {
         getPrepareKey: componentId => `${componentId}!foobar`,
       },
-    )(MockComponent);
+    )(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should dispatch INIT_COMPONENT actions with the correct prepareKey', () => preparePromise.then(() => {
-      expect(store.getActions()).toEqual([
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent!foobar' },
-        },
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent!foobar' },
-        },
-      ]);
-    }));
+    it(
+      'should dispatch INIT_COMPONENT actions with the correct prepareKey',
+      () => preparePromise.then(() => {
+        expect(store.getActions()).toEqual([
+          {
+            type: INIT_COMPONENT,
+            payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent!foobar' },
+          },
+          {
+            type: INIT_COMPONENT,
+            payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent!foobar' },
+          },
+        ]);
+      }),
+    );
   });
   describe('with a component configured with allowLazy', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const mockInitAction = jest.fn(() => Promise.resolve());
     const MockWithInit = withInitAction(
       mockInitAction,
       {
         allowLazy: true,
       },
-    )(MockComponent);
+    )(SimpleInitTestComponent);
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     it('should call the initAction', () => preparePromise.then(
@@ -86,11 +88,11 @@ describe('prepareComponent', () => {
       expect(store.getActions()).toEqual([
         {
           type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
         {
           type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
       ]),
     ));
@@ -98,14 +100,13 @@ describe('prepareComponent', () => {
   describe('with a component wrapped in connect()', () => {
     clearComponentIds();
     const store = mockStore({ custom: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const mockInitAction = jest.fn(() => Promise.resolve());
     const MockWithInit = withInitAction(
       mockInitAction,
       {
         getInitState: state => state.custom,
       },
-    )(MockComponent);
+    )(SimpleInitTestComponent);
     const ConnectedMockWithInit = connect(null, null)(MockWithInit);
     const preparePromise = store.dispatch(prepareComponent(ConnectedMockWithInit, {}));
 
@@ -113,11 +114,11 @@ describe('prepareComponent', () => {
       expect(store.getActions()).toEqual([
         {
           type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
         {
           type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'MockComponent[]' },
+          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
         },
       ]);
     }));
@@ -128,12 +129,11 @@ describe('prepareComponent', () => {
   describe('with props', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const mockInitAction = jest.fn(() => Promise.resolve());
     const MockWithInit = withInitAction(
       ['foo', 'bar'],
       mockInitAction,
-    )(MockComponent);
+    )(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {
       bar: 'abc',
       foo: 123,
@@ -141,7 +141,9 @@ describe('prepareComponent', () => {
     }));
 
     it('should only include values of initProps in the prepareKey', () => preparePromise.then(
-      () => expect(store.getActions()[0].payload.prepareKey).toBe('MockComponent[123,"abc"]'),
+      () => expect(
+        store.getActions()[0].payload.prepareKey,
+      ).toBe('SimpleInitTestComponent[123,"abc"]'),
     ));
 
     it('should call the initAction with only the initProps values', () => preparePromise.then(
@@ -154,11 +156,10 @@ describe('prepareComponent', () => {
   describe('when not passing one of the values configured in initProps', () => {
     clearComponentIds();
     const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-    const MockComponent = () => <script />;
     const MockWithInit = withInitAction(
       ['foo', 'bar'],
       () => Promise.resolve(),
-    )(MockComponent);
+    )(SimpleInitTestComponent);
 
     it(
       'should throw an error',
