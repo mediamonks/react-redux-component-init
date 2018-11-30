@@ -52,7 +52,7 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
     return { clientTestRenderer };
   };
 
-  this.client.update = function updateOnClient(newComponentFunc) {
+  this.client.update = function updateOnClient(newComponentFunc = componentFunc) {
     if (!clientTestRenderer) {
       throw new Error(
         'No client test renderer exists. Call IsomorphicTestRenderer.client.render() before running IsomorphicTestRenderer.client.update()',

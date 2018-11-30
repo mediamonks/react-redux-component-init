@@ -222,4 +222,120 @@ describe('isomorphic application', () => {
       });
     });
   });
+
+  it('correctly sets isInitializing while rendering async initActions', async () => {
+    clearComponentIds();
+    const mockActionPrepared = jest.fn(({ testInitProp }) => Promise.resolve(testInitProp));
+    const mockActionClient = jest.fn(
+      ({ testInitProp }) => new Promise(resolve => setTimeout(() => resolve(testInitProp), 400)),
+    );
+
+    const TestComponent = withInitAction(['testInitProp'], {
+      prepared: mockActionPrepared,
+      clientOnly: mockActionClient,
+    })(SimpleInitTestComponent);
+
+    const environment = new IsomorphicTestEnvironment(
+      () => <TestComponent testInitProp="unchanged" />,
+      { init: initReducer },
+    );
+
+    const preparePromise = environment.server.store.dispatch(
+      prepareComponent(TestComponent, { testInitProp: 'unchanged' }),
+    );
+    await preparePromise;
+    const { serverMarkup } = environment.server.render();
+    expect(serverMarkup).toMatchInlineSnapshot(
+      `"<div><h1>This is a test component</h1><span>initializing...</span><span>The test param is: unchanged</span></div>"`,
+    );
+
+    // Initial client render
+    const { clientTestRenderer } = environment.client.render();
+    expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
+  <span>
+    The test param is: 
+    unchanged
+  </span>
+</div>
+`);
+    environment.client.store.dispatch(setInitMode(MODE_INIT_SELF));
+
+    await new Promise(resolve => process.nextTick(resolve));
+    expect(mockActionClient).toHaveBeenCalledTimes(1);
+    // After componentDidMount called initComponent
+    environment.client.update();
+    expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
+  <span>
+    The test param is: 
+    unchanged
+  </span>
+</div>
+`);
+
+    await expect(mockActionClient.mock.results[0].value).resolves.toBe('unchanged');
+    await new Promise(resolve => process.nextTick(resolve));
+    // After initComponent action resolves
+    environment.client.update();
+    expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    The test param is: 
+    unchanged
+  </span>
+</div>
+`);
+
+    // After prop change
+    environment.client.update(() => <TestComponent testInitProp="changed" />);
+    expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
+  <span>
+    The test param is: 
+    changed
+  </span>
+</div>
+`);
+
+    await new Promise(resolve => process.nextTick(resolve));
+    expect(mockActionClient).toHaveBeenCalledTimes(2);
+    await expect(mockActionClient.mock.results[1].value).resolves.toBe('changed');
+    await new Promise(resolve => process.nextTick(resolve));
+
+    // After reinitialize completes
+    environment.client.update(() => <TestComponent testInitProp="changed" />);
+    expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    The test param is: 
+    changed
+  </span>
+</div>
+`);
+  });
 });

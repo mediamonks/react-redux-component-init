@@ -155,7 +155,7 @@ export default (p1, p2, p3) => {
         } = props;
 
         this.state = {
-          initializedOnce: !__modeInitSelf && isPrepared,
+          initializedOnce: !__modeInitSelf && isPrepared && !initActionClient,
         };
       }
 
@@ -218,7 +218,7 @@ export default (p1, p2, p3) => {
         const isInitializing = __modeInitSelf
           ? selfInitState === false ||
             (typeof selfInitState === 'undefined' && !this.state.initializedOnce)
-          : allowLazy && !isPrepared;
+          : (initAction && allowLazy && !isPrepared) || initActionClient;
 
         const cloak =
           isInitializing &&
