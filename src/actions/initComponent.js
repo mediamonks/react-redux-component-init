@@ -86,7 +86,7 @@ export default (
       );
       shouldCallInitActionClient = initActionClient && (
         // mounted on the client (after first render)
-        (initSelf !== INIT_SELF_NEVER)
+        (mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER)
       );
       break;
     case 'willReceiveProps':
