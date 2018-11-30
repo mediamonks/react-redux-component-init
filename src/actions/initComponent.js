@@ -29,12 +29,7 @@ import { INIT_COMPONENT } from './actionTypes';
  * @returns {function} A thunk function that should be passed directly to the Redux `dispatch`
  * function.
  */
-export default (
-  Component,
-  initValues,
-  prepareKey,
-  { caller } = {},
-) => (dispatch, getState) => {
+export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch, getState) => {
   if (!Component.initConfig) {
     throw new Error('No init config found on Component passed to initComponent');
   }
@@ -67,27 +62,27 @@ export default (
       shouldCallInitActionClient = false;
       break;
     case 'willMount':
-      errorNotPrepared = !!initAction && (mode === MODE_PREPARE) && !allowLazy;
-      shouldCallInitAction = !!initAction && (
+      errorNotPrepared = !!initAction && mode === MODE_PREPARE && !allowLazy;
+      shouldCallInitAction =
+        !!initAction &&
         // mounted on the client (after first render), lazy not allowed
-        ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER) && !allowLazy) ||
-        // first render, not already prepared, lazy allowed
-        ((mode === MODE_PREPARE) && !isPrepared && allowLazy)
-      );
+        ((mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER && !allowLazy) ||
+          // first render, not already prepared, lazy allowed
+          (mode === MODE_PREPARE && !isPrepared && allowLazy));
       shouldCallInitActionClient = false;
       break;
     case 'didMount':
       errorNotPrepared = false;
-      shouldCallInitAction = !!initAction && (
+      shouldCallInitAction =
+        !!initAction &&
         // mounted on the client (after first render), lazy allowed
-        ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER) && allowLazy) ||
-        // first render, not already prepared, lazy allowed
-        ((mode === MODE_PREPARE) && !isPrepared && allowLazy)
-      );
-      shouldCallInitActionClient = initActionClient && (
+        ((mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER && allowLazy) ||
+          // first render, not already prepared, lazy allowed
+          (mode === MODE_PREPARE && !isPrepared && allowLazy));
+      shouldCallInitActionClient =
+        !!initActionClient &&
         // mounted on the client (after first render)
-        (mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER)
-      );
+        (mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER);
       break;
     case 'willReceiveProps':
       // reinitialize is checked in withInitAction
@@ -96,15 +91,23 @@ export default (
       shouldCallInitActionClient = !!initActionClient;
       break;
     default:
-      throw new Error(`Unexpected value '${caller}' for caller. Expected one of: 'prepareComponent', 'didMount', 'willMount', 'willReceiveProps'`);
+      throw new Error(
+        `Unexpected value '${caller}' for caller. Expected one of: 'prepareComponent', 'didMount', 'willMount', 'willReceiveProps'`,
+      );
   }
 
   if (errorNotPrepared) {
     if (typeof prepared[prepareKey] === 'undefined') {
       const initPropsObj = propNameValuesToObject(initProps, initValues);
-      throw new PrepareValidationError(`Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(initPropsObj)}`);
+      throw new PrepareValidationError(
+        `Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(
+          initPropsObj,
+        )}`,
+      );
     } else if (prepared[prepareKey] === false) {
-      throw new PrepareValidationError(`Expected component "${componentId}" to be prepared but preparation is still pending`);
+      throw new PrepareValidationError(
+        `Expected component "${componentId}" to be prepared but preparation is still pending`,
+      );
     }
   }
 
@@ -125,30 +128,36 @@ export default (
 
   return Promise.resolve()
     .then(() => {
-      const initActionReturn = shouldCallInitAction ?
-        initAction(initPropsObj, dispatch, getState) :
-        Promise.resolve();
+      const initActionReturn = shouldCallInitAction
+        ? initAction(initPropsObj, dispatch, getState)
+        : Promise.resolve();
 
       if (typeof initActionReturn.then !== 'function') {
-        const error = new Error(`Expected initAction${initActionObjectParam ? '.server' : ''} to return a Promise. Returned an ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`);
+        const error = new Error(
+          `Expected initAction${
+            initActionObjectParam ? '.server' : ''
+          } to return a Promise. Returned an ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`,
+        );
         error.isInvalidReturnError = true;
         throw error;
       }
 
       return initActionReturn;
     })
-    .then((serverValue) => {
-      const initActionClientReturn = shouldCallInitActionClient ?
-        initActionClient(initPropsObj, dispatch, getState) :
-        Promise.resolve();
+    .then(serverValue => {
+      const initActionClientReturn = shouldCallInitActionClient
+        ? initActionClient(initPropsObj, dispatch, getState)
+        : Promise.resolve();
 
       if (typeof initActionClientReturn.then !== 'function') {
-        const error = new Error(`Expected initAction.client to return a Promise. Returned an ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`);
+        const error = new Error(
+          `Expected initAction.client to return a Promise. Returned an ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`,
+        );
         error.isInvalidReturnError = true;
         throw error;
       }
 
-      return initActionClientReturn.then((clientValue) => {
+      return initActionClientReturn.then(clientValue => {
         if (shouldCallInitAction && shouldCallInitActionClient) {
           return [serverValue, clientValue];
         }
@@ -156,7 +165,7 @@ export default (
         return shouldCallInitAction ? serverValue : clientValue;
       });
     })
-    .catch((e) => {
+    .catch(e => {
       if (onError && !e.isInvalidReturnError) {
         onError(e);
       } else {
@@ -171,7 +180,7 @@ export default (
         throw e;
       }
     })
-    .then((result) => {
+    .then(result => {
       dispatch({
         type: INIT_COMPONENT,
         payload: {

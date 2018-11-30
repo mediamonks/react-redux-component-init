@@ -16,14 +16,11 @@ describe('isomorphic application', () => {
     describe('and calling prepareComponent() on the server', () => {
       clearComponentIds();
       const mockAction = jest.fn(() => Promise.resolve());
-      const TestComponent = withInitAction(
-        mockAction,
-      )(SimpleInitTestComponent);
+      const TestComponent = withInitAction(mockAction)(SimpleInitTestComponent);
 
-      const environment = new IsomorphicTestEnvironment(
-        () => <TestComponent />,
-        { init: initReducer },
-      );
+      const environment = new IsomorphicTestEnvironment(() => <TestComponent />, {
+        init: initReducer,
+      });
 
       const preparePromise = environment.server.store.dispatch(prepareComponent(TestComponent));
 
@@ -46,14 +43,11 @@ describe('isomorphic application', () => {
     describe('without calling prepareComponent() on the server', () => {
       clearComponentIds();
       const mockAction = () => Promise.resolve();
-      const TestComponent = withInitAction(
-        { prepared: mockAction },
-      )(SimpleInitTestComponent);
+      const TestComponent = withInitAction({ prepared: mockAction })(SimpleInitTestComponent);
 
-      const environment = new IsomorphicTestEnvironment(
-        () => <TestComponent />,
-        { init: initReducer },
-      );
+      const environment = new IsomorphicTestEnvironment(() => <TestComponent />, {
+        init: initReducer,
+      });
 
       it('should throw an error on server', () => {
         expect(() => environment.server.render()).toThrow(PrepareValidationError);
@@ -65,19 +59,20 @@ describe('isomorphic application', () => {
     clearComponentIds();
     const mockAction = jest.fn(() => Promise.resolve());
 
-    const TestComponent = withInitAction(
-      mockAction,
-    )(SimpleInitTestComponent);
+    const TestComponent = withInitAction(mockAction)(SimpleInitTestComponent);
 
-    const environment = new IsomorphicTestEnvironment(
-      () => <div>no TestComponent</div>,
-      { init: initReducer },
-    );
+    const environment = new IsomorphicTestEnvironment(() => <div>no TestComponent</div>, {
+      init: initReducer,
+    });
 
     environment.server.render();
     const { clientTestRenderer } = environment.client.render();
     environment.client.store.dispatch(setInitMode(MODE_INIT_SELF));
-    environment.client.update(() => <div><TestComponent /></div>);
+    environment.client.update(() => (
+      <div>
+        <TestComponent />
+      </div>
+    ));
 
     it('should render the component on the client', () => {
       expect(clientTestRenderer.toJSON()).toMatchSnapshot();
@@ -92,10 +87,7 @@ describe('isomorphic application', () => {
     describe('calling prepareComponent with the correct prop', () => {
       clearComponentIds();
       const mockAction = jest.fn(({ testInitProp }) => Promise.resolve(testInitProp));
-      const TestComponent = withInitAction(
-        ['testInitProp'],
-        mockAction,
-      )(SimpleInitTestComponent);
+      const TestComponent = withInitAction(['testInitProp'], mockAction)(SimpleInitTestComponent);
 
       const environment = new IsomorphicTestEnvironment(
         () => <TestComponent testInitProp={5} testProp={15} />,

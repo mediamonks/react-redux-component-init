@@ -9,18 +9,19 @@
  * @returns {Array} An array of values in the same order as the values passed to the
  * `props` parameter.
  */
-export default (target, props) => props.map((prop) => {
-  const segments = prop.split('.');
+export default (target, props) =>
+  props.map(prop => {
+    const segments = prop.split('.');
 
-  if (segments.length < 2) {
-    return target[prop];
-  }
-
-  return segments.reduce((result, segment) => {
-    if (typeof result !== 'object') {
-      return undefined;
+    if (segments.length < 2) {
+      return target[prop];
     }
 
-    return result[segment];
-  }, target);
-});
+    return segments.reduce((result, segment) => {
+      if (typeof result !== 'object') {
+        return undefined;
+      }
+
+      return result[segment];
+    }, target);
+  });

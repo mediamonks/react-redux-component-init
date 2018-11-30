@@ -15,14 +15,12 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
 
   this.server.render = function renderServer() {
     if (serverStoreState) {
-      throw new Error('Store state already set. Did you call IsomorphicTestRenderer.server.render() twice?');
+      throw new Error(
+        'Store state already set. Did you call IsomorphicTestRenderer.server.render() twice?',
+      );
     }
 
-    const rootElement = (
-      <Provider store={self.server.store}>
-        { componentFunc() }
-      </Provider>
-    );
+    const rootElement = <Provider store={self.server.store}>{componentFunc()}</Provider>;
     const serverTestRenderer = renderer.create(rootElement);
     serverStoreState = self.server.store.getState();
 
@@ -31,21 +29,23 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
 
   this.client.render = function renderOnClient() {
     if (!serverStoreState) {
-      throw new Error('No store state from server set. Call IsomorphicTestRenderer.server.render() before running IsomorphicTestRenderer.client.render()');
+      throw new Error(
+        'No store state from server set. Call IsomorphicTestRenderer.server.render() before running IsomorphicTestRenderer.client.render()',
+      );
     }
     if (self.client.store) {
-      throw new Error('Client store already exists. Did you call IsomorphicTestRenderer.client.render() twice?');
+      throw new Error(
+        'Client store already exists. Did you call IsomorphicTestRenderer.client.render() twice?',
+      );
     }
     if (clientTestRenderer) {
-      throw new Error('Client test renderer already exists. Did you call IsomorphicTestRenderer.client.render() twice?');
+      throw new Error(
+        'Client test renderer already exists. Did you call IsomorphicTestRenderer.client.render() twice?',
+      );
     }
 
     self.client.store = createStore(rootReducer, serverStoreState, applyMiddleware(thunk));
-    const rootElement = (
-      <Provider store={self.client.store}>
-        { componentFunc() }
-      </Provider>
-    );
+    const rootElement = <Provider store={self.client.store}>{componentFunc()}</Provider>;
     clientTestRenderer = renderer.create(rootElement);
 
     return { clientTestRenderer };
@@ -53,14 +53,12 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
 
   this.client.update = function updateOnClient(newComponentFunc) {
     if (!clientTestRenderer) {
-      throw new Error('No client test renderer exists. Call IsomorphicTestRenderer.client.render() before running IsomorphicTestRenderer.client.update()');
+      throw new Error(
+        'No client test renderer exists. Call IsomorphicTestRenderer.client.render() before running IsomorphicTestRenderer.client.update()',
+      );
     }
 
-    const rootElement = (
-      <Provider store={self.client.store}>
-        { newComponentFunc() }
-      </Provider>
-    );
+    const rootElement = <Provider store={self.client.store}>{newComponentFunc()}</Provider>;
 
     clientTestRenderer.update(rootElement);
 
