@@ -158,7 +158,7 @@ describe('initComponent', () => {
       });
     });
     describe('with { caller: \'didMount\' }option given, no prepare state present and { allowLazy: true }', () => {
-      it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
+      it('calls the initAction and dispatches { complete: true } when the action resolves', () => {
         clearComponentIds();
         const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
         const MockWithInit = withInitAction(
@@ -184,7 +184,7 @@ describe('initComponent', () => {
     describe('with {caller: \'prepareComponent\'}', () => {
       describe('and no prepare state is present', () => {
         describe('with no allowLazy option on the component', () => {
-          it('dispatches INIT_COMPONENT with { completed: false }', () => {
+          it('dispatches INIT_COMPONENT with { complete: false }', () => {
             clearComponentIds();
             const store = mockStore({ init: {
               mode: MODE_PREPARE,
@@ -209,7 +209,7 @@ describe('initComponent', () => {
             ]);
           });
 
-          it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
+          it('calls the initAction and dispatches { complete: true } when the action resolves', () => {
             clearComponentIds();
             const store = mockStore({ init: {
               mode: MODE_PREPARE,
@@ -244,7 +244,7 @@ describe('initComponent', () => {
           });
         });
         describe('with { allowLazy: true } on the component', () => {
-          it('dispatches INIT_COMPONENT with { completed: false }', () => {
+          it('dispatches INIT_COMPONENT with { complete: false }', () => {
             clearComponentIds();
             const store = mockStore({ init: {
               mode: MODE_PREPARE,
@@ -350,7 +350,7 @@ describe('initComponent', () => {
   });
   describe('when initMode === MODE_INIT_SELF', () => {
     describe('with an async initAction', () => {
-      it('dispatches INIT_COMPONENT with { completed: false }', () => {
+      it('dispatches INIT_COMPONENT with { complete: false }', () => {
         clearComponentIds();
         const store = mockStore({ init: {
           mode: MODE_INIT_SELF,
@@ -371,7 +371,7 @@ describe('initComponent', () => {
         ]);
       });
 
-      it('dispatches { completed: true } when the action resolves', () => {
+      it('dispatches { complete: true } when the action resolves', () => {
         clearComponentIds();
         const store = mockStore({ init: {
           mode: MODE_INIT_SELF,

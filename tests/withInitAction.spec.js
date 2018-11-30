@@ -50,6 +50,7 @@ describe('withInitAction', () => {
         expect(WithInit.initConfig.options.reinitialize).toBe(true);
       });
     });
+
     describe('with all options set', () => {
       clearComponentIds();
       class FooComponent extends Component {
