@@ -67,7 +67,7 @@ export default (
       shouldCallInitActionClient = false;
       break;
     case 'willMount':
-      errorNotPrepared = mode === MODE_PREPARE && !allowLazy;
+      errorNotPrepared = !!initAction && (mode === MODE_PREPARE) && !allowLazy;
       shouldCallInitAction = !!initAction && (
         // mounted on the client (after first render), lazy not allowed
         ((mode === MODE_INIT_SELF) && (initSelf !== INIT_SELF_NEVER) && !allowLazy) ||
