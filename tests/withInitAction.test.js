@@ -119,17 +119,104 @@ describe('isomorphic application', () => {
           environment.client.store.dispatch(setInitMode(MODE_INIT_SELF));
           environment.client.update(() => <TestComponent testInitProp={5} testProp={16} />);
 
-          expect(mockAction).toHaveBeenCalledTimes(1);
+          return new Promise(resolve => {
+            process.nextTick(() => {
+              expect(mockAction).toHaveBeenCalledTimes(1);
+              resolve();
+            });
+          });
         });
       });
 
       describe('changing the init prop on the client', () => {
-        it('should call the initAction again with the correct value', async () => {
+        it('should call the initAction again with the correct value', () => {
           environment.client.update(() => <TestComponent testInitProp={6} testProp={16} />);
 
+          return new Promise(resolve => {
+            process.nextTick(async () => {
+              expect(mockAction).toHaveBeenCalledTimes(2);
+              await expect(mockAction.mock.results[1].value).resolves.toBe(6);
+              resolve();
+            });
+          });
+        });
+      });
+    });
+  });
+
+  describe('server-rendering a component with prepared and clientOnly initAction', () => {
+    clearComponentIds();
+    const mockActionPrepared = jest.fn(({ testInitProp }) => Promise.resolve(testInitProp));
+    const mockActionClient = jest.fn(({ testInitProp }) => Promise.resolve(testInitProp));
+    const TestComponent = withInitAction(['testInitProp'], {
+      prepared: mockActionPrepared,
+      clientOnly: mockActionClient,
+    })(SimpleInitTestComponent);
+
+    const environment = new IsomorphicTestEnvironment(
+      () => <TestComponent testInitProp={5} testProp={15} />,
+      { init: initReducer },
+    );
+
+    const preparePromise = environment.server.store.dispatch(
+      prepareComponent(TestComponent, { testInitProp: 5 }),
+    );
+
+    it('renders the component on the server', async () => {
+      await preparePromise;
+      const { serverTestRenderer } = environment.server.render();
+      expect(serverTestRenderer.toJSON()).toMatchSnapshot();
+    });
+
+    it('calls the prepared initAction once with the correct prop value', async () => {
+      expect(mockActionPrepared).toHaveBeenCalledTimes(1);
+      await expect(mockActionPrepared.mock.results[0].value).resolves.toBe(5);
+    });
+
+    it('does not call the clientOnly initAction before client render', () => {
+      expect(mockActionClient).not.toHaveBeenCalled();
+    });
+
+    it('renders the component on the client', () => {
+      const { clientTestRenderer } = environment.client.render();
+      expect(clientTestRenderer.toJSON()).toMatchSnapshot();
+    });
+
+    it('calls the prepared initAction only once', () => {
+      expect(mockActionPrepared).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls the client initAction once with the correct prop value', async () => {
+      expect(mockActionClient).toHaveBeenCalledTimes(1);
+      await expect(mockActionClient.mock.results[0].value).resolves.toBe(5);
+    });
+
+    describe('changing a non-init prop on the client', () => {
+      it('does not call the initAction again', () => {
+        environment.client.store.dispatch(setInitMode(MODE_INIT_SELF));
+        environment.client.update(() => <TestComponent testInitProp={5} testProp={16} />);
+
+        return new Promise(resolve => {
+          process.nextTick(() => {
+            expect(mockActionClient).toHaveBeenCalledTimes(1);
+            expect(mockActionPrepared).toHaveBeenCalledTimes(1);
+            resolve();
+          });
+        });
+      });
+    });
+
+    describe('changing the init prop on the client', () => {
+      it('calls both initAction again with the correct value', () => {
+        environment.client.update(() => <TestComponent testInitProp={6} testProp={16} />);
+
+        return new Promise(resolve => {
           process.nextTick(async () => {
-            expect(mockAction).toHaveBeenCalledTimes(2);
-            await expect(mockAction.mock.results[1].value).resolves.toBe(6);
+            expect(mockActionPrepared).toHaveBeenCalledTimes(2);
+            await expect(mockActionPrepared.mock.results[1].value).resolves.toBe(6);
+            expect(mockActionClient).toHaveBeenCalledTimes(2);
+            await expect(mockActionClient.mock.results[1].value).resolves.toBe(6);
+            resolve();
           });
         });
       });

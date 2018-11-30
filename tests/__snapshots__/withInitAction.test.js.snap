@@ -10,6 +10,38 @@ exports[`isomorphic application rendering a component with prepared initAction a
 </div>
 `;
 
+exports[`isomorphic application server-rendering a component with prepared and clientOnly initAction renders the component on the client 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    The test param is: 
+    5
+  </span>
+  <span>
+    The test prop is: 
+    15
+  </span>
+</div>
+`;
+
+exports[`isomorphic application server-rendering a component with prepared and clientOnly initAction renders the component on the server 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    The test param is: 
+    5
+  </span>
+  <span>
+    The test prop is: 
+    15
+  </span>
+</div>
+`;
+
 exports[`isomorphic application server-rendering a component with prepared initAction and calling prepareComponent() on the server should render the component on the client 1`] = `
 <div>
   <h1>
