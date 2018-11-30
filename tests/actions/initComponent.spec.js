@@ -35,30 +35,6 @@ describe('initComponent', () => {
 
             expect(() => store.dispatch(initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'willMount' }))).not.toThrow();
           });
-
-          // TODO: this has caller: didMount. Should be somewhere else
-          it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
-            clearComponentIds();
-            const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
-            const MockWithInit = withInitAction(
-              () => Promise.resolve(),
-              { allowLazy: true },
-            )(SimpleInitTestComponent);
-
-            return store.dispatch(initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'didMount' })).then(() => {
-              const actions = store.getActions();
-              expect(actions).toEqual([
-                {
-                  type: INIT_COMPONENT,
-                  payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-                },
-                {
-                  type: INIT_COMPONENT,
-                  payload: { complete: true, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-                },
-              ]);
-            });
-          });
         });
       });
       describe('and the preparation has completed', () => {
@@ -179,6 +155,30 @@ describe('initComponent', () => {
           expect(
             () => store.dispatch(initComponent(MockWithInit, ['bar'], 'SimpleInitTestComponent["bar"]', { caller: 'willMount' })),
           ).toThrow();
+        });
+      });
+    });
+    describe('with { caller: \'didMount\' }option given, no prepare state present and { allowLazy: true }', () => {
+      it('calls the initAction and dispatches { completed: true } when the action resolves', () => {
+        clearComponentIds();
+        const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+        const MockWithInit = withInitAction(
+          () => Promise.resolve(),
+          { allowLazy: true },
+        )(SimpleInitTestComponent);
+
+        return store.dispatch(initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'didMount' })).then(() => {
+          const actions = store.getActions();
+          expect(actions).toEqual([
+            {
+              type: INIT_COMPONENT,
+              payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
+            },
+            {
+              type: INIT_COMPONENT,
+              payload: { complete: true, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
+            },
+          ]);
         });
       });
     });
