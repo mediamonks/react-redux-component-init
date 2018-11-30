@@ -7,13 +7,14 @@ import withInitAction, { clearComponentIds } from '../../src/withInitAction';
 import prepareComponent from '../../src/actions/prepareComponent';
 import { MODE_PREPARE } from '../../src/initMode';
 import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
+import { modePrepareAndNothingPrepared } from '../fixtures/storeState';
 
 const mockStore = configureMockStore([thunk]);
 
 describe('prepareComponent', () => {
   describe('with a component without initConfig', () => {
     it('should return a promise that resolves', () => {
-      const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+      const store = mockStore(modePrepareAndNothingPrepared);
       return expect(
         store.dispatch(prepareComponent(SimpleInitTestComponent, {})),
       ).resolves.toBeUndefined();
@@ -34,7 +35,7 @@ describe('prepareComponent', () => {
   });
   describe('with a custom getPrepareKey', () => {
     clearComponentIds();
-    const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+    const store = mockStore(modePrepareAndNothingPrepared);
     const MockWithInit = withInitAction(() => Promise.resolve(), {
       getPrepareKey: componentId => `${componentId}!foobar`,
     })(SimpleInitTestComponent);
@@ -47,7 +48,7 @@ describe('prepareComponent', () => {
   });
   describe('with a component configured with allowLazy', () => {
     clearComponentIds();
-    const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+    const store = mockStore(modePrepareAndNothingPrepared);
     const mockInitAction = jest.fn(() => Promise.resolve());
     const MockWithInit = withInitAction(mockInitAction, {
       allowLazy: true,
@@ -85,7 +86,7 @@ describe('prepareComponent', () => {
   });
   describe('with props', () => {
     clearComponentIds();
-    const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+    const store = mockStore(modePrepareAndNothingPrepared);
     const mockInitAction = jest.fn(() => Promise.resolve());
     const MockWithInit = withInitAction(['foo', 'bar'], mockInitAction)(SimpleInitTestComponent);
     const preparePromise = store.dispatch(
@@ -111,7 +112,7 @@ describe('prepareComponent', () => {
   });
   describe('when not passing one of the values configured in initProps', () => {
     clearComponentIds();
-    const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+    const store = mockStore(modePrepareAndNothingPrepared);
     const MockWithInit = withInitAction(['foo', 'bar'], () => Promise.resolve())(
       SimpleInitTestComponent,
     );

@@ -6,10 +6,15 @@ import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 
 import withInitAction, { clearComponentIds } from '../src/withInitAction';
-import { MODE_INIT_SELF, MODE_PREPARE } from '../src/initMode';
 import { INIT_SELF_ASYNC, INIT_SELF_BLOCKING } from '../src/initSelfMode';
 
 import SimpleInitTestComponent from './fixtures/SimpleInitTestComponent';
+import {
+  modeInitSelfAndSimplePreparedNoProps,
+  modeInitSelfAndSimplePreparedReinitializedNoProps,
+  modeInitSelfAndSimplePreparedReinitializingNoProps,
+  modePrepareAndSimplePreparedNoProps
+} from './fixtures/storeState';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -182,15 +187,7 @@ describe('withInitAction', () => {
     // see issue #17
     it('does not set an { isInitializing: true } prop', () => {
       clearComponentIds();
-      const store = mockStore({
-        init: {
-          mode: MODE_PREPARE,
-          prepared: {
-            'SimpleInitTestComponent[]': true,
-          },
-          selfInit: {},
-        },
-      });
+      const store = mockStore(modePrepareAndSimplePreparedNoProps);
 
       const WithInit = withInitAction(() => Promise.resolve())(SimpleInitTestComponent);
       const tree = renderer
@@ -209,15 +206,7 @@ describe('withInitAction', () => {
     // See issue #19
     it('sets an { isInitializing: true } prop', () => {
       clearComponentIds();
-      const store = mockStore({
-        init: {
-          mode: MODE_INIT_SELF,
-          prepared: {
-            'SimpleInitTestComponent[]': true,
-          },
-          selfInit: {},
-        },
-      });
+      const store = mockStore(modeInitSelfAndSimplePreparedNoProps);
 
       const WithInit = withInitAction(() => Promise.resolve())(SimpleInitTestComponent);
       const tree = renderer
@@ -236,17 +225,7 @@ describe('withInitAction', () => {
     it('sets an { isInitializing: true } prop', () => {
       clearComponentIds();
 
-      const store = mockStore({
-        init: {
-          mode: MODE_INIT_SELF,
-          prepared: {
-            'SimpleInitTestComponent[]': true,
-          },
-          selfInit: {
-            'SimpleInitTestComponent[]': false,
-          },
-        },
-      });
+      const store = mockStore(modeInitSelfAndSimplePreparedReinitializingNoProps);
 
       const WithInit = withInitAction(() => Promise.resolve())(SimpleInitTestComponent);
       const tree = renderer
@@ -264,17 +243,7 @@ describe('withInitAction', () => {
   describe('with a component that has been prepared and has completed re-initializing', () => {
     it('does not set an { isInitializing: true } prop', () => {
       clearComponentIds();
-      const store = mockStore({
-        init: {
-          mode: MODE_INIT_SELF,
-          prepared: {
-            'SimpleInitTestComponent[]': true,
-          },
-          selfInit: {
-            'SimpleInitTestComponent[]': true,
-          },
-        },
-      });
+      const store = mockStore(modeInitSelfAndSimplePreparedReinitializedNoProps);
 
       const WithInit = withInitAction(() => Promise.resolve())(SimpleInitTestComponent);
       const tree = renderer

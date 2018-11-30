@@ -4,8 +4,11 @@ import thunk from 'redux-thunk';
 
 import initComponent from '../../src/actions/initComponent';
 import withInitAction, { clearComponentIds } from '../../src/withInitAction';
-import { MODE_INIT_SELF, MODE_PREPARE } from '../../src/initMode';
 import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
+import {
+  modeInitSelfAndNothingPrepared,
+  modePrepareAndNothingPrepared
+} from '../fixtures/storeState';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -14,7 +17,7 @@ describe('initComponent with clientOnly action', () => {
     describe("with { caller: 'willMount' } option given", () => {
       clearComponentIds();
       const testAction = jest.fn(() => Promise.resolve());
-      const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+      const store = mockStore(modePrepareAndNothingPrepared);
       const MockWithInit = withInitAction({ clientOnly: testAction })(SimpleInitTestComponent);
 
       store.dispatch(
@@ -37,7 +40,7 @@ describe('initComponent with clientOnly action', () => {
     describe("with { caller: 'didMount' } option given", () => {
       clearComponentIds();
       const testAction = jest.fn(() => Promise.resolve());
-      const store = mockStore({ init: { mode: MODE_PREPARE, prepared: {} } });
+      const store = mockStore(modePrepareAndNothingPrepared);
       const MockWithInit = withInitAction({ clientOnly: testAction })(SimpleInitTestComponent);
 
       store.dispatch(
@@ -63,7 +66,7 @@ describe('initComponent with clientOnly action', () => {
     describe("with { caller: 'willMount' } option given", () => {
       clearComponentIds();
       const testAction = jest.fn(() => Promise.resolve());
-      const store = mockStore({ init: { mode: MODE_INIT_SELF, prepared: {} } });
+      const store = mockStore(modeInitSelfAndNothingPrepared);
       const MockWithInit = withInitAction({ clientOnly: testAction })(SimpleInitTestComponent);
 
       store.dispatch(
@@ -88,7 +91,7 @@ describe('initComponent with clientOnly action', () => {
       it('calls the action with the correct values', () => {
         clearComponentIds();
         const mockAction = jest.fn(({ testInitProp }) => Promise.resolve(testInitProp));
-        const store = mockStore({ init: { mode: MODE_INIT_SELF, prepared: {} } });
+        const store = mockStore(modeInitSelfAndNothingPrepared);
         const MockWithInit = withInitAction(['testInitProp'], { clientOnly: mockAction })(
           SimpleInitTestComponent,
         );
@@ -112,7 +115,7 @@ describe('initComponent with clientOnly action', () => {
         const mockAction = jest.fn(
           ({ testInitProp }) => new Promise(resolve => setTimeout(() => resolve(testInitProp), 40)),
         );
-        const store = mockStore({ init: { mode: MODE_INIT_SELF, prepared: {} } });
+        const store = mockStore(modeInitSelfAndNothingPrepared);
         const MockWithInit = withInitAction(['testInitProp'], { clientOnly: mockAction })(
           SimpleInitTestComponent,
         );
@@ -136,7 +139,7 @@ describe('initComponent with clientOnly action', () => {
         const mockAction = jest.fn(
           ({ testInitProp }) => new Promise(resolve => setTimeout(() => resolve(testInitProp), 40)),
         );
-        const store = mockStore({ init: { mode: MODE_INIT_SELF, prepared: {} } });
+        const store = mockStore(modeInitSelfAndNothingPrepared);
         const MockWithInit = withInitAction(['testInitProp'], { clientOnly: mockAction })(
           SimpleInitTestComponent,
         );
