@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import renderer from 'react-test-renderer';
+import ReactDomServer from 'react-dom/server';
 import thunk from 'redux-thunk';
 
 export default function IsomorphicTestEnvironment(componentFunc, reducers) {
@@ -21,10 +22,10 @@ export default function IsomorphicTestEnvironment(componentFunc, reducers) {
     }
 
     const rootElement = <Provider store={self.server.store}>{componentFunc()}</Provider>;
-    const serverTestRenderer = renderer.create(rootElement);
+    const serverMarkup = ReactDomServer.renderToStaticMarkup(rootElement);
     serverStoreState = self.server.store.getState();
 
-    return { serverTestRenderer };
+    return { serverMarkup };
   };
 
   this.client.render = function renderOnClient() {

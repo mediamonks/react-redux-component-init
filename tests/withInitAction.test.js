@@ -24,18 +24,18 @@ describe('isomorphic application', () => {
 
       const preparePromise = environment.server.store.dispatch(prepareComponent(TestComponent));
 
-      it('should render the component on the server', async () => {
+      it('renders the component on the server', async () => {
         await preparePromise;
-        const { serverTestRenderer } = environment.server.render();
-        expect(serverTestRenderer.toJSON()).toMatchSnapshot();
+        const { serverMarkup } = environment.server.render();
+        expect(serverMarkup).toMatchSnapshot();
       });
 
-      it('should render the component on the client', () => {
+      it('renders the component on the client', () => {
         const { clientTestRenderer } = environment.client.render();
         expect(clientTestRenderer.toJSON()).toMatchSnapshot();
       });
 
-      it('should call the initAction once', () => {
+      it('calls the initAction once', () => {
         expect(mockAction).toHaveBeenCalledTimes(1);
       });
     });
@@ -49,7 +49,7 @@ describe('isomorphic application', () => {
         init: initReducer,
       });
 
-      it('should throw an error on server', () => {
+      it('throws an error on server', () => {
         expect(() => environment.server.render()).toThrow(PrepareValidationError);
       });
     });
@@ -74,11 +74,11 @@ describe('isomorphic application', () => {
       </div>
     ));
 
-    it('should render the component on the client', () => {
+    it('renders the component on the client', () => {
       expect(clientTestRenderer.toJSON()).toMatchSnapshot();
     });
 
-    it('should call the initAction once', () => {
+    it('calls the initAction once', () => {
       expect(mockAction).toHaveBeenCalledTimes(1);
     });
   });
@@ -98,24 +98,24 @@ describe('isomorphic application', () => {
         prepareComponent(TestComponent, { testInitProp: 5 }),
       );
 
-      it('should render the component on the server', async () => {
+      it('renders the component on the server', async () => {
         await preparePromise;
-        const { serverTestRenderer } = environment.server.render();
-        expect(serverTestRenderer.toJSON()).toMatchSnapshot();
+        const { serverMarkup } = environment.server.render();
+        expect(serverMarkup).toMatchSnapshot();
       });
 
-      it('should render the component on the client', () => {
+      it('renders the component on the client', () => {
         const { clientTestRenderer } = environment.client.render();
         expect(clientTestRenderer.toJSON()).toMatchSnapshot();
       });
 
-      it('should call the initAction once with the correct prop value', async () => {
+      it('calls the initAction once with the correct prop value', async () => {
         expect(mockAction).toHaveBeenCalledTimes(1);
         await expect(mockAction.mock.results[0].value).resolves.toBe(5);
       });
 
       describe('changing a non-init prop on the client', () => {
-        it('should not have called the initAction again', () => {
+        it('does not call the initAction again', () => {
           environment.client.store.dispatch(setInitMode(MODE_INIT_SELF));
           environment.client.update(() => <TestComponent testInitProp={5} testProp={16} />);
 
@@ -129,7 +129,7 @@ describe('isomorphic application', () => {
       });
 
       describe('changing the init prop on the client', () => {
-        it('should call the initAction again with the correct value', () => {
+        it('calls the initAction again with the correct value', () => {
           environment.client.update(() => <TestComponent testInitProp={6} testProp={16} />);
 
           return new Promise(resolve => {
@@ -164,8 +164,8 @@ describe('isomorphic application', () => {
 
     it('renders the component on the server', async () => {
       await preparePromise;
-      const { serverTestRenderer } = environment.server.render();
-      expect(serverTestRenderer.toJSON()).toMatchSnapshot();
+      const { serverMarkup } = environment.server.render();
+      expect(serverMarkup).toMatchSnapshot();
     });
 
     it('calls the prepared initAction once with the correct prop value', async () => {

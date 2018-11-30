@@ -82,7 +82,7 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
       shouldCallInitActionClient =
         !!initActionClient &&
         // mounted on the client (after first render)
-        (mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER);
+        (initSelf !== INIT_SELF_NEVER);
       break;
     case 'willReceiveProps':
       // reinitialize is checked in withInitAction

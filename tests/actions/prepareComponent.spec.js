@@ -13,7 +13,7 @@ const mockStore = configureMockStore([thunk]);
 
 describe('prepareComponent', () => {
   describe('with a component without initConfig', () => {
-    it('should return a promise that resolves', () => {
+    it('returns a promise that resolves', () => {
       const store = mockStore(modePrepareAndNothingPrepared);
       return expect(
         store.dispatch(prepareComponent(SimpleInitTestComponent, {})),
@@ -27,7 +27,7 @@ describe('prepareComponent', () => {
       getInitState: state => state.custom,
     })(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should dispatch INIT_COMPONENT actions', () =>
+    it('dispatches INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toMatchSnapshot();
@@ -40,7 +40,7 @@ describe('prepareComponent', () => {
       getPrepareKey: componentId => `${componentId}!foobar`,
     })(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should dispatch INIT_COMPONENT actions with the correct prepareKey', () =>
+    it('dispatches INIT_COMPONENT actions with the correct prepareKey', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toMatchSnapshot();
@@ -55,9 +55,9 @@ describe('prepareComponent', () => {
     })(SimpleInitTestComponent);
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should call the initAction', () =>
+    it('calls the initAction', () =>
       preparePromise.then(() => expect(mockInitAction).toHaveBeenCalledTimes(1)));
-    it('should dispatch INIT_COMPONENT actions', () =>
+    it('dispatches INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toMatchSnapshot();
@@ -76,12 +76,12 @@ describe('prepareComponent', () => {
     )(MockWithInit);
     const preparePromise = store.dispatch(prepareComponent(ConnectedMockWithInit, {}));
 
-    it('should dispatch INIT_COMPONENT actions', () =>
+    it('dispatches INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toMatchSnapshot();
       }));
-    it('should call the initAction', () =>
+    it('calls the initAction', () =>
       preparePromise.then(expect(mockInitAction).toHaveBeenCalledTimes(1)));
   });
   describe('with props', () => {
@@ -97,12 +97,12 @@ describe('prepareComponent', () => {
       }),
     );
 
-    it('should only include values of initProps in the prepareKey', () =>
+    it('only includes values of initProps in the prepareKey', () =>
       preparePromise.then(() =>
         expect(store.getActions()[0].payload.prepareKey).toBe('SimpleInitTestComponent[123,"abc"]'),
       ));
 
-    it('should call the initAction with only the initProps values', () =>
+    it('calls the initAction with only the initProps values', () =>
       preparePromise.then(() =>
         expect(mockInitAction.mock.calls[0][0]).toEqual({
           bar: 'abc',
@@ -117,7 +117,7 @@ describe('prepareComponent', () => {
       SimpleInitTestComponent,
     );
 
-    it('should throw an error', () =>
+    it('throws an error', () =>
       expect(() =>
         store.dispatch(
           prepareComponent(MockWithInit, {
@@ -139,15 +139,15 @@ describe('prepareComponent', () => {
     )(SimpleInitTestComponent);
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    it('should call the prepared initAction', () =>
+    it('calls the prepared initAction', () =>
       preparePromise.then(() => expect(mockInitActionPrepared).toHaveBeenCalledTimes(1)));
-    it('should dispatch INIT_COMPONENT actions', () =>
+    it('dispatches INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toMatchSnapshot();
       }));
 
-    it('should not call the clientOnly initAction', () =>
+    it('does not call the clientOnly initAction', () =>
       preparePromise.then(() => expect(mockInitActionClient).not.toHaveBeenCalled()));
   });
   describe('with a component that only has a clientOnly action', () => {
@@ -163,9 +163,9 @@ describe('prepareComponent', () => {
     const disableConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     disableConsoleWarn.mockRestore();
-    it('should call the prepared initAction', () =>
+    it('call the prepared initAction', () =>
       preparePromise.then(() => expect(mockInitActionClient).not.toHaveBeenCalled()));
-    it('should not dispatch INIT_COMPONENT actions', () =>
+    it('does not dispatch INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([]);

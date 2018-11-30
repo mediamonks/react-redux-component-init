@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`prepareComponent with a component configured with allowLazy should dispatch INIT_COMPONENT actions 1`] = `
+exports[`prepareComponent with a component configured with allowLazy dispatches INIT_COMPONENT actions 1`] = `
 Array [
   Object {
     "payload": Object {
@@ -21,7 +21,7 @@ Array [
 ]
 `;
 
-exports[`prepareComponent with a component that has a prepared and clientOnly action should dispatch INIT_COMPONENT actions 1`] = `
+exports[`prepareComponent with a component that has a prepared and clientOnly action dispatches INIT_COMPONENT actions 1`] = `
 Array [
   Object {
     "payload": Object {
@@ -42,7 +42,7 @@ Array [
 ]
 `;
 
-exports[`prepareComponent with a component wrapped in connect() should dispatch INIT_COMPONENT actions 1`] = `
+exports[`prepareComponent with a component wrapped in connect() dispatches INIT_COMPONENT actions 1`] = `
 Array [
   Object {
     "payload": Object {
@@ -63,7 +63,7 @@ Array [
 ]
 `;
 
-exports[`prepareComponent with a custom getInitState should dispatch INIT_COMPONENT actions 1`] = `
+exports[`prepareComponent with a custom getInitState dispatches INIT_COMPONENT actions 1`] = `
 Array [
   Object {
     "payload": Object {
@@ -84,7 +84,7 @@ Array [
 ]
 `;
 
-exports[`prepareComponent with a custom getPrepareKey should dispatch INIT_COMPONENT actions with the correct prepareKey 1`] = `
+exports[`prepareComponent with a custom getPrepareKey dispatches INIT_COMPONENT actions with the correct prepareKey 1`] = `
 Array [
   Object {
     "payload": Object {

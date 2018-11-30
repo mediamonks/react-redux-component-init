@@ -33,3 +33,24 @@ Array [
   },
 ]
 `;
+
+exports[`initComponent with clientOnly action when initMode === MODE_PREPARE with { caller: 'didMount' } option given does not dispatch INIT_COMPONENT 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;

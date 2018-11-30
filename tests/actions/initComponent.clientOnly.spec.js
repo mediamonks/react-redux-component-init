@@ -47,17 +47,17 @@ describe('initComponent with clientOnly action', () => {
         initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'didMount' }),
       );
 
-      it('does not call the action', () =>
+      it('calls the action', () =>
         new Promise(resolve => {
           process.nextTick(() => {
-            expect(testAction).not.toHaveBeenCalled();
+            expect(testAction).toHaveBeenCalledTimes(1);
             resolve();
           });
         }));
 
       it('does not dispatch INIT_COMPONENT', () => {
         const actions = store.getActions();
-        return expect(actions).toEqual([]);
+        expect(actions).toMatchSnapshot();
       });
     });
   });
