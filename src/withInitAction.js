@@ -15,8 +15,8 @@ import createPrepareKey from './utils/createPrepareKey';
 
 const componentIds = [];
 
-const INIT_ACTION_PROP_PREPARED = 'server';
-const INIT_ACTION_PROP_CLIENTONLY = 'client';
+const INIT_ACTION_PROP_PREPARED = 'prepared';
+const INIT_ACTION_PROP_CLIENTONLY = 'clientOnly';
 
 /**
  * Attaches an initialization action to a component.

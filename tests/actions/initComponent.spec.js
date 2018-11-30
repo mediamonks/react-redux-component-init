@@ -1,5 +1,4 @@
 /* global expect, describe, it, jest */
-import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 

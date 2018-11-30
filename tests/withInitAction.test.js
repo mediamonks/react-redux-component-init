@@ -47,7 +47,7 @@ describe('isomorphic application', () => {
       clearComponentIds();
       const mockAction = () => Promise.resolve();
       const TestComponent = withInitAction(
-        { server: mockAction },
+        { prepared: mockAction },
       )(SimpleInitTestComponent);
 
       const environment = new IsomorphicTestEnvironment(
