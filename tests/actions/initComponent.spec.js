@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 import initComponent from '../../src/actions/initComponent';
 import withInitAction, { clearComponentIds } from '../../src/withInitAction';
 import { MODE_INIT_SELF, MODE_PREPARE } from '../../src/initMode';
-import { INIT_COMPONENT } from '../../src/actions/actionTypes';
 import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
 
 const mockStore = configureMockStore([thunk]);
@@ -168,16 +167,7 @@ describe('initComponent', () => {
 
         return store.dispatch(initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'didMount' })).then(() => {
           const actions = store.getActions();
-          expect(actions).toEqual([
-            {
-              type: INIT_COMPONENT,
-              payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-            },
-            {
-              type: INIT_COMPONENT,
-              payload: { complete: true, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-            },
-          ]);
+          expect(actions).toMatchSnapshot();
         });
       });
     });
@@ -201,12 +191,7 @@ describe('initComponent', () => {
             ));
 
             const actions = store.getActions();
-            expect(actions).toEqual([
-              {
-                type: INIT_COMPONENT,
-                payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-              },
-            ]);
+            expect(actions).toMatchSnapshot();
           });
 
           it('calls the initAction and dispatches { complete: true } when the action resolves', () => {
@@ -228,16 +213,7 @@ describe('initComponent', () => {
 
             return initPromise.then(() => {
               const actions = store.getActions();
-              expect(actions).toEqual([
-                {
-                  type: INIT_COMPONENT,
-                  payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-                },
-                {
-                  type: INIT_COMPONENT,
-                  payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-                },
-              ]);
+              expect(actions).toMatchSnapshot();
 
               expect(mockInitAction.mock.calls.length).toBe(1);
             });
@@ -262,12 +238,7 @@ describe('initComponent', () => {
             ));
 
             const actions = store.getActions();
-            expect(actions).toEqual([
-              {
-                type: INIT_COMPONENT,
-                payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-              },
-            ]);
+            expect(actions).toMatchSnapshot();
           });
         });
       });
@@ -363,12 +334,7 @@ describe('initComponent', () => {
         store.dispatch(initComponent(MockWithInit, [], 'SimpleInitTestComponent[]', { caller: 'willMount' }));
 
         const actions = store.getActions();
-        expect(actions).toEqual([
-          {
-            type: INIT_COMPONENT,
-            payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-          },
-        ]);
+        expect(actions).toMatchSnapshot();
       });
 
       it('dispatches { complete: true } when the action resolves', () => {
@@ -385,16 +351,7 @@ describe('initComponent', () => {
 
         return initPromise.then(() => {
           const actions = store.getActions();
-          expect(actions).toEqual([
-            {
-              type: INIT_COMPONENT,
-              payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-            },
-            {
-              type: INIT_COMPONENT,
-              payload: { complete: true, isPrepare: false, prepareKey: 'SimpleInitTestComponent[]' },
-            },
-          ]);
+          expect(actions).toMatchSnapshot();
         });
       });
 

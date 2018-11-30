@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import withInitAction, { clearComponentIds } from '../../src/withInitAction';
 import prepareComponent from '../../src/actions/prepareComponent';
 import { MODE_PREPARE } from '../../src/initMode';
-import { INIT_COMPONENT } from '../../src/actions/actionTypes';
 import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
 
 const mockStore = configureMockStore([thunk]);
@@ -31,16 +30,8 @@ describe('prepareComponent', () => {
     )(SimpleInitTestComponent);
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(() => {
-      expect(store.getActions()).toEqual([
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-      ]);
+      const actions = store.getActions();
+      expect(actions).toMatchSnapshot();
     }));
   });
   describe('with a custom getPrepareKey', () => {
@@ -56,16 +47,8 @@ describe('prepareComponent', () => {
     it(
       'should dispatch INIT_COMPONENT actions with the correct prepareKey',
       () => preparePromise.then(() => {
-        expect(store.getActions()).toEqual([
-          {
-            type: INIT_COMPONENT,
-            payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent!foobar' },
-          },
-          {
-            type: INIT_COMPONENT,
-            payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent!foobar' },
-          },
-        ]);
+        const actions = store.getActions();
+        expect(actions).toMatchSnapshot();
       }),
     );
   });
@@ -82,20 +65,12 @@ describe('prepareComponent', () => {
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     it('should call the initAction', () => preparePromise.then(
-      expect(mockInitAction.mock.calls.length).toBe(1),
+      () => expect(mockInitAction.mock.calls.length).toBe(1),
     ));
-    it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(
-      expect(store.getActions()).toEqual([
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-      ]),
-    ));
+    it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(() => {
+      const actions = store.getActions();
+      expect(actions).toMatchSnapshot();
+    }));
   });
   describe('with a component wrapped in connect()', () => {
     clearComponentIds();
@@ -111,16 +86,8 @@ describe('prepareComponent', () => {
     const preparePromise = store.dispatch(prepareComponent(ConnectedMockWithInit, {}));
 
     it('should dispatch INIT_COMPONENT actions', () => preparePromise.then(() => {
-      expect(store.getActions()).toEqual([
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: false, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-        {
-          type: INIT_COMPONENT,
-          payload: { complete: true, isPrepare: true, prepareKey: 'SimpleInitTestComponent[]' },
-        },
-      ]);
+      const actions = store.getActions();
+      expect(actions).toMatchSnapshot();
     }));
     it('should call the initAction', () => preparePromise.then(
       expect(mockInitAction.mock.calls.length).toBe(1),

@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 import initComponent from '../../src/actions/initComponent';
 import withInitAction, { clearComponentIds } from '../../src/withInitAction';
 import { MODE_INIT_SELF, MODE_PREPARE } from '../../src/initMode';
-import { INIT_COMPONENT } from '../../src/actions/actionTypes';
 import SimpleInitTestComponent from '../fixtures/SimpleInitTestComponent';
 
 const mockStore = configureMockStore([thunk]);
@@ -137,12 +136,7 @@ describe('initComponent with clientOnly action', () => {
         return new Promise((resolve) => {
           process.nextTick(() => {
             const actions = store.getActions();
-            expect(actions).toEqual([
-              {
-                type: INIT_COMPONENT,
-                payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[45]' },
-              },
-            ]);
+            expect(actions).toMatchSnapshot();
 
             resolve();
           });
@@ -172,16 +166,7 @@ describe('initComponent with clientOnly action', () => {
             mockAction.mock.results[0].value.then(() => {
               process.nextTick(() => {
                 const actions = store.getActions();
-                expect(actions).toEqual([
-                  {
-                    type: INIT_COMPONENT,
-                    payload: { complete: false, isPrepare: false, prepareKey: 'SimpleInitTestComponent[45]' },
-                  },
-                  {
-                    type: INIT_COMPONENT,
-                    payload: { complete: true, isPrepare: false, prepareKey: 'SimpleInitTestComponent[45]' },
-                  },
-                ]);
+                expect(actions).toMatchSnapshot();
                 resolve();
               });
             });

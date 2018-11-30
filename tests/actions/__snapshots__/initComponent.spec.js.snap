@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initComponent when initMode === MODE_INIT_SELF with an async initAction dispatches { complete: true } when the action resolves 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent when initMode === MODE_INIT_SELF with an async initAction dispatches INIT_COMPONENT with { complete: false } 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent when initMode === MODE_PREPARE with { caller: 'didMount' }option given, no prepare state present and { allowLazy: true } calls the initAction and dispatches { complete: true } when the action resolves 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent when initMode === MODE_PREPARE with {caller: 'prepareComponent'} and no prepare state is present with { allowLazy: true } on the component dispatches INIT_COMPONENT with { complete: false } 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent when initMode === MODE_PREPARE with {caller: 'prepareComponent'} and no prepare state is present with no allowLazy option on the component calls the initAction and dispatches { complete: true } when the action resolves 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent when initMode === MODE_PREPARE with {caller: 'prepareComponent'} and no prepare state is present with no allowLazy option on the component dispatches INIT_COMPONENT with { complete: false } 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;

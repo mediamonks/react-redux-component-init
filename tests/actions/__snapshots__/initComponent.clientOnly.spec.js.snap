@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initComponent with clientOnly action when initMode === MODE_INIT_SELF with { caller: 'didMount' } option given and init props dispatches INIT_COMPONENT with { complete: true } when the action resolves 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[45]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[45]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`initComponent with clientOnly action when initMode === MODE_INIT_SELF with { caller: 'didMount' } option given and init props initially dispatches INIT_COMPONENT with { complete: false } 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": false,
+      "prepareKey": "SimpleInitTestComponent[45]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;

@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prepareComponent with a component configured with allowLazy should dispatch INIT_COMPONENT actions 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`prepareComponent with a component wrapped in connect() should dispatch INIT_COMPONENT actions 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`prepareComponent with a custom getInitState should dispatch INIT_COMPONENT actions 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
+exports[`prepareComponent with a custom getPrepareKey should dispatch INIT_COMPONENT actions with the correct prepareKey 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent!foobar",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent!foobar",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
