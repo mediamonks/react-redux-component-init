@@ -56,7 +56,7 @@ describe('prepareComponent', () => {
 
     const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
     it('should call the initAction', () =>
-      preparePromise.then(() => expect(mockInitAction.mock.calls.length).toBe(1)));
+      preparePromise.then(() => expect(mockInitAction).toHaveBeenCalledTimes(1)));
     it('should dispatch INIT_COMPONENT actions', () =>
       preparePromise.then(() => {
         const actions = store.getActions();
@@ -82,7 +82,7 @@ describe('prepareComponent', () => {
         expect(actions).toMatchSnapshot();
       }));
     it('should call the initAction', () =>
-      preparePromise.then(expect(mockInitAction.mock.calls.length).toBe(1)));
+      preparePromise.then(expect(mockInitAction).toHaveBeenCalledTimes(1)));
   });
   describe('with props', () => {
     clearComponentIds();
@@ -125,5 +125,88 @@ describe('prepareComponent', () => {
           }),
         ),
       ).toThrow());
+  });
+  describe('with a component that has a prepared and clientOnly action', () => {
+    clearComponentIds();
+    const store = mockStore(modePrepareAndNothingPrepared);
+    const mockInitActionPrepared = jest.fn(() => Promise.resolve());
+    const mockInitActionClient = jest.fn(() => Promise.resolve());
+    const MockWithInit = withInitAction(
+      {
+        prepared: mockInitActionPrepared,
+        clientOnly: mockInitActionClient,
+      },
+    )(SimpleInitTestComponent);
+
+    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
+    it('should call the prepared initAction', () =>
+      preparePromise.then(() => expect(mockInitActionPrepared).toHaveBeenCalledTimes(1)));
+    it('should dispatch INIT_COMPONENT actions', () =>
+      preparePromise.then(() => {
+        const actions = store.getActions();
+        expect(actions).toMatchSnapshot();
+      }));
+
+    it('should not call the clientOnly initAction', () =>
+      preparePromise.then(() => expect(mockInitActionClient).not.toHaveBeenCalled()));
+  });
+  describe('with a component that only has a clientOnly action', () => {
+    clearComponentIds();
+    const store = mockStore(modePrepareAndNothingPrepared);
+    const mockInitActionClient = jest.fn(() => Promise.resolve());
+    const MockWithInit = withInitAction(
+      {
+        clientOnly: mockInitActionClient,
+      },
+    )(SimpleInitTestComponent);
+
+    const disableConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
+    disableConsoleWarn.mockRestore();
+    it('should call the prepared initAction', () =>
+      preparePromise.then(() => expect(mockInitActionClient).not.toHaveBeenCalled()));
+    it('should not dispatch INIT_COMPONENT actions', () =>
+      preparePromise.then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([]);
+      }));
+  });
+
+  it('warns the user about redundant calls with clientOnly initAction components', () => {
+    clearComponentIds();
+    const store = mockStore(modePrepareAndNothingPrepared);
+    const mockInitActionClient = jest.fn(() => Promise.resolve());
+    const MockWithInit = withInitAction(
+      {
+        clientOnly: mockInitActionClient,
+      },
+    )(SimpleInitTestComponent);
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
+    return preparePromise.then(() => {
+      expect(consoleWarnSpy).toHaveBeenCalled();
+      consoleWarnSpy.mockRestore();
+    });
+  });
+
+  it('does not warn the user if there is a prepared action', () => {
+    clearComponentIds();
+    const store = mockStore(modePrepareAndNothingPrepared);
+    const mockInitActionPrepared = jest.fn(() => Promise.resolve());
+    const mockInitActionClient = jest.fn(() => Promise.resolve());
+    const MockWithInit = withInitAction(
+      {
+        prepared: mockInitActionPrepared,
+        clientOnly: mockInitActionClient,
+      },
+    )(SimpleInitTestComponent);
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
+    return preparePromise.then(() => {
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+      consoleWarnSpy.mockRestore();
+    });
   });
 });

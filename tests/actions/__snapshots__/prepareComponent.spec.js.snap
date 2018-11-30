@@ -21,6 +21,27 @@ Array [
 ]
 `;
 
+exports[`prepareComponent with a component that has a prepared and clientOnly action should dispatch INIT_COMPONENT actions 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "complete": false,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+  Object {
+    "payload": Object {
+      "complete": true,
+      "isPrepare": true,
+      "prepareKey": "SimpleInitTestComponent[]",
+    },
+    "type": "@@react-redux-component-init/INIT_COMPONENT",
+  },
+]
+`;
+
 exports[`prepareComponent with a component wrapped in connect() should dispatch INIT_COMPONENT actions 1`] = `
 Array [
   Object {
