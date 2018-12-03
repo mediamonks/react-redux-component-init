@@ -2,6 +2,10 @@
 title: API
 nav_order: 4
 ---
+
+# API
+{: .no_toc }
+
 1. TOC
 {:toc}
 

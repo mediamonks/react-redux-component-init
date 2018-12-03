@@ -2,11 +2,14 @@
 title: Core concepts
 nav_order: 2
 ---
+
+# Core concepts
+
 Below is a technical explanation of the implementation for this library. For quick
 setup instructions, [skip to setup](./setup.md){: .text-blue-000 }
 {: .bg-green-300.text-grey-lt-000.p-3 }
 
-# Initialization lifecycle
+## Initialization lifecycle
 This is a short rundown of what happens on every page request
 
 #### Server side
@@ -37,7 +40,7 @@ Note: By default, the component will start rendering even if the `initAction` ha
 For more info see the [withInitAction() API docs](./api.html#withInitAction)
 {: .bg-grey-lt-100.p-3 }
 
-# The prepare tree
+##The prepare tree
 As described in _initialization lifecycle_ above, we need to dispatch `prepareComponent()` for each
 component on the page before page render. But how do we know in advance which components will be
 on our page? The trick is to configure our page component initialization to dispatch
@@ -49,7 +52,8 @@ recursively prepare its descendants.
 ![The prepare tree](./assets/prepare-tree.png)
 
 ## Example
-Below is an example of a `HomePage` component layout. We will need to load the notifications to display in the header, the list of posts, and some detail data for each post.
+Below is an example of a `HomePage` component layout. We will need to load the notifications to
+display in the header, the list of posts, and some detail data for each post.
 
 ![Example homepage](./assets/example-homepage.png)
 
@@ -57,7 +61,8 @@ We use `withInitAction()` to add the following initialization to our components:
  - `Homepage` calls `prepareComponent(Header)` and `prepareComponent(HomeTimeline)`
  - `Header` calls `prepareComponent(HeaderNotifications)`
  - `HeaderNotifications` loads the notifications for the current user
- - `HomeTimeline` loads a list of posts. It now has a couple of post ids and calls `prepareComponent(Post, { id: postId })` for each post
+ - `HomeTimeline` loads a list of posts. It now has a couple of post ids and
+ calls `prepareComponent(Post, { id: postId })` for each post
  - `Post` loads some detail data to display the itself
 
 ![Example prepare tree](./assets/example-prepare-tree.png)
