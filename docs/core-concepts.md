@@ -37,3 +37,7 @@ We use `withInitAction()` to add the following initialization to our components:
 ![Example prepare tree](./assets/example-prepare-tree.png)
 
 _NOTE: In this example, the list of posts are loaded separately from the post detail data. In another application this might be a single call_
+
+---
+
+[Continue reading: Setup](./setup.md){: .btn .btn-purple }

@@ -51,3 +51,7 @@ import { setInitMode, MODE_INIT_SELF } from 'react-redux-component-init';
 ...
 store.dispatch(setInitMode(MODE_INIT_SELF));
 ```
+
+---
+
+[Continue reading: API](./api.md){: .btn .btn-purple }

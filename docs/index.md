@@ -2,13 +2,12 @@
 title: When to use / motivation
 nav_order: 1
 ---
-
-## When to use
+# When to use
 This library is designed for usage in large-scale react applications with server-side rendering. It
 can also be used in smaller applications or application without server-side rendering. However, in
 these use cases a less complex solution might be more appropriate.
 
-### prerequisites
+## prerequisites
 This library will only work for applications that have the following setup:
  - A react+redux setup with server-side rendering. Redux state on the server should be injected
  into the client as initial state
@@ -16,7 +15,7 @@ This library will only work for applications that have the following setup:
  - A Redux store configured with the [redux-thunk](https://github.com/gaearon/redux-thunk) middleware
  - Support for Promises on both the server and client side
 
-## Motivation
+# Motivation
 In a react application, we often want to perform a certain action when a component mounts. These
 actions are often asynchonous (like loading some data from an api). More specifically, in
 isomorphic applications (with server side rendering) we often want these actions to be completed
@@ -32,3 +31,7 @@ before we start rendering the page. In order to achieve this, we have two altern
 
 This library aims to provide utilities to make the *component based approach* a feasible solution.
 It allows us to define initialization on each component without having to do more than one render.
+
+---
+
+[Continue reading: Core concepts](./core-concepts.md){: .btn .btn-purple }
