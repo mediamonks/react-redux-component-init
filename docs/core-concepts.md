@@ -6,8 +6,8 @@ nav_order: 2
 # Core concepts
 
 Below is a technical explanation of the implementation for this library. For quick
-setup instructions, [skip to setup](./setup.md){: .text-blue-000 }
-{: .bg-green-300.text-grey-lt-000.p-3 }
+setup instructions, [skip to setup](./setup.md)
+{: .bg-yellow-000.p-3 }
 
 ## Initialization lifecycle
 This is a short rundown of what happens on every page request
@@ -40,7 +40,7 @@ Note: By default, the component will start rendering even if the `initAction` ha
 For more info see the [withInitAction() API docs](./api.html#withInitAction)
 {: .bg-grey-lt-100.p-3 }
 
-##The prepare tree
+## The prepare tree
 As described in _initialization lifecycle_ above, we need to dispatch `prepareComponent()` for each
 component on the page before page render. But how do we know in advance which components will be
 on our page? The trick is to configure our page component initialization to dispatch
