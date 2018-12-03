@@ -270,7 +270,6 @@ describe('isomorphic application', () => {
     await new Promise(resolve => process.nextTick(resolve));
     expect(mockActionClient).toHaveBeenCalledTimes(1);
     // After componentDidMount called initComponent
-    environment.client.update();
     expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
 <div>
   <h1>
@@ -289,7 +288,6 @@ describe('isomorphic application', () => {
     await expect(mockActionClient.mock.results[0].value).resolves.toBe('unchanged');
     await new Promise(resolve => process.nextTick(resolve));
     // After initComponent action resolves
-    environment.client.update();
     expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
 <div>
   <h1>
@@ -325,7 +323,6 @@ describe('isomorphic application', () => {
     await new Promise(resolve => process.nextTick(resolve));
 
     // After reinitialize completes
-    environment.client.update(() => <TestComponent testInitProp="changed" />);
     expect(clientTestRenderer.toJSON()).toMatchInlineSnapshot(`
 <div>
   <h1>
