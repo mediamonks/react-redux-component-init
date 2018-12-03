@@ -40,7 +40,7 @@ Note: By default, the component will start rendering even if the `initAction` ha
 For more info see the [withInitAction() API docs](./api.html#withInitAction)
 {: .bg-grey-lt-100.p-3 }
 
-##The prepare tree
+## The prepare tree
 As described in _initialization lifecycle_ above, we need to dispatch `prepareComponent()` for each
 component on the page before page render. But how do we know in advance which components will be
 on our page? The trick is to configure our page component initialization to dispatch
