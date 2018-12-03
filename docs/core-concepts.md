@@ -6,8 +6,8 @@ nav_order: 2
 # Core concepts
 
 Below is a technical explanation of the implementation for this library. For quick
-setup instructions, [skip to setup](./setup.md){: .text-blue-000 }
-{: .bg-green-300.text-grey-lt-000.p-3 }
+setup instructions, [skip to setup](./setup.md)
+{: .bg-yellow-000.p-3 }
 
 ## Initialization lifecycle
 This is a short rundown of what happens on every page request
