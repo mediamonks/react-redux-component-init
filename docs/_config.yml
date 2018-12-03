@@ -5,5 +5,8 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-theme: jekyll-theme-minimal
+theme: just-the-docs
 repository: mediamonks/react-redux-component-init
+aux_links:
+  "view it on GitHub":
+    - "//github.com/mediamonks/react-redux-component-init"
