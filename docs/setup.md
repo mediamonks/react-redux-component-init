@@ -2,6 +2,9 @@
 title: Setup
 nav_order: 3
 ---
+
+# Setup
+
 Make sure you have an existing setup with the prerequisites listed
 [here](./index.html#prerequisites){: .text-blue-000 }
 {: .bg-green-300.text-grey-lt-000.p-3 }
