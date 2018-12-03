@@ -6,7 +6,7 @@ nav_order: 1
 
 
 View the rendered version of this documentation at:
-https://mediamonks.github.com/react-redux-component-init
+https://mediamonks.github.io/react-redux-component-init
 
 
 

@@ -32,4 +32,4 @@ This library aims to provide utilities to make the *component based approach* a 
 It allows us to define initialization on each component without having to do more than one render.
 
 # Full documentation
-Please see the full documentation at https://mediamonks.github.com/react-redux-component-init]
+Please see the full documentation at https://mediamonks.github.io/react-redux-component-init
