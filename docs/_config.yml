@@ -1,0 +1,12 @@
+title: react-redux-component-init
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+remote_theme: pmarsceill/just-the-docs
+repository: mediamonks/react-redux-component-init
+aux_links:
+  "view it on GitHub":
+    - "//github.com/mediamonks/react-redux-component-init"

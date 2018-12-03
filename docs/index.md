@@ -1,6 +1,16 @@
-# react-redux-component-init
-A library to manage react component initialization in isomorphic applications using [Redux.js](http://redux.js.org).
+---
+title: When to use / motivation
+nav_order: 1
+---
+{::comment}
 
+
+View the rendered version of this documentation at:
+https://mediamonks.github.io/react-redux-component-init
+
+
+
+{:/comment}
 # When to use
 This library is designed for usage in large-scale react applications with server-side rendering. It
 can also be used in smaller applications or application without server-side rendering. However, in
@@ -31,5 +41,6 @@ before we start rendering the page. In order to achieve this, we have two altern
 This library aims to provide utilities to make the *component based approach* a feasible solution.
 It allows us to define initialization on each component without having to do more than one render.
 
-# Full documentation
-Please see the full documentation at https://mediamonks.github.io/react-redux-component-init
+---
+
+[Continue reading: Core concepts](./core-concepts.md){: .btn .btn-purple }

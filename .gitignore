@@ -1,6 +1,8 @@
 # copy to .npmignore
 .idea
 node_modules
+_site
+.sass-cache
 
 # only ignore in git
 lib
