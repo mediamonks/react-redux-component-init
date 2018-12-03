@@ -2,7 +2,12 @@
 title: API
 nav_order: 4
 ---
-### `withInitAction([initProps], initAction, [options])(Component)`
+1. TOC
+{:toc}
+
+## withInitAction `([initProps], initAction, [options])(Component)`
+{: #withInitAction }
+
 Higher-order component that adds initialization configuration to an existing component.
  - `initProps` `{Array<string>}` _(optional)_ An array of names of `props` that are relevant for initialization.
    - Only the values of these props are available in the `initAction` function
@@ -29,11 +34,13 @@ Higher-order component that adds initialization configuration to an existing com
   This defaults to a function that concatenates the `componentId` and the stringified `propsArray`. In most cases, this will ensure that a component instance on the server is matched to the corresponding instance on the client. However, if the props are somehow always different between server and client, you may use this function to generate a key that omits that difference.
    - `getInitState` A function that takes the Redux state and returns the init state of the reducer from this module. By default, it is assumed the state is under the `init` property. If the reducer is included elsewhere, this function can be set to retrieve the state.
 
-#### example
-```
+### example
+{: .no_toc }
+
+``` jsx
 // PostComponent.js
 class Post extends React.Component {
- ...
+  // ...
 }
 
 export default withInitAction(
@@ -44,13 +51,13 @@ export default withInitAction(
 
 // PostPage.js
 import Post from './components/PostComponent';
-...
+// ...
 class PostPage extends React.Component {
-  ...
+  // ...
   render() {
-    ...
+    // ...
     <Post id={this.props.location.query.postId} />
-    ...
+    // ...
   }
 }
 
@@ -60,16 +67,23 @@ export default withInitAction(
 )(PostPage);
 ```
 
-### `prepareComponent(Component, props)`
+
+## prepareComponent `(Component, props)`
+{: #prepareComponent }
+
 Action creator to prepare a component for rendering on the server side (`initMode == MODE_PREPARE`). Should be passed to the Redux dispatch function. Returns a Promise that resolves when preparation is complete
  - `Component` `{react.Component}` The component that should be prepared. This should be a component returned by the `withInitAction` higher-order component. If no `withInitAction` wrapper is around the Component, dispatching this action will have no effect.
  - `props` `{object}` The props to prepare the component with. These should be the same props as you expect to pass when you eventually render component. It should at least include the props configured in the `initProps` array of `withInitAction`.
 
-### `prepareComponents(components, props)`
+## prepareComponents `(components, props)`
+{: #prepareComponents }
+
 A shorthand action creator for multiple `prepareComponent` calls with the same `props`. Returns a Promise that resolves when preparation for all components is complete
  - `components` `{Array<react.Component>}` An array of components to prepare
  - `props` `{object}` The props to prepare with
 
-### `setInitMode(initMode)`
+## setInitMode `(initMode)`
+{: #setInitMode }
+
 An action creator to switch the `initMode` of the application. Should be called with `MODE_INIT_SELF` after the initial render on the client.
  - `initMode` `{string}` Either of the modes `MODE_PREPARE` or `MODE_INIT_SELF` as defined in the `initMode` export of this module

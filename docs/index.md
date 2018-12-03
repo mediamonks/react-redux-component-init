@@ -2,6 +2,15 @@
 title: When to use / motivation
 nav_order: 1
 ---
+{::comment}
+
+
+View the rendered version of this documentation at:
+https://mediamonks.github.com/react-redux-component-init
+
+
+
+{:/comment}
 # When to use
 This library is designed for usage in large-scale react applications with server-side rendering. It
 can also be used in smaller applications or application without server-side rendering. However, in
