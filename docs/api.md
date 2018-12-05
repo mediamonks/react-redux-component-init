@@ -1,8 +1,16 @@
 ---
 title: API
-nav_order: 4
+nav_order: 5
 ---
+{::comment}
 
+
+# View the rendered version of this documentation at:
+https://mediamonks.github.io/react-redux-component-init
+
+
+
+{:/comment}
 # API
 {: .no_toc }
 

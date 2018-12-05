@@ -5,8 +5,9 @@ nav_order: 2
 
 # Core concepts
 
-Below is a technical explanation of the implementation for this library. For quick
-setup instructions, [skip to setup](./setup.md)
+Below is an in-depth explanation of the implementation for this library. For quick
+setup instructions, see [setup](./setup.md). If you just want to know how to use this library
+once it has been setup, follow the [usage guide](./usage)
 {: .bg-yellow-000.p-3 }
 
 ## Initialization lifecycle
