@@ -19,7 +19,7 @@ Sometimes we don't want a component to initialize on the server. Here are some e
  - The init action handles some sensitive data that should not be accessed by the server
  - The init action uses some data that is only available in the browser, like `localStorage`
 
-In our example, the `<Comments>` component should be initialized later because of the first to
+In our example, the `<Comments>` component should be initialized later because of the first two
 reasons listed above. We could skip `react-redux-component-init` and just add our action to the
 `componentDidMount()` hook of `<Comments>`. However, we don't want to refactor our components every
 time we move work between client and server. It is also convenient to have all our initialization
