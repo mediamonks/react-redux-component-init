@@ -5,8 +5,9 @@ nav_order: 2
 
 # Core concepts
 
-Below is a technical explanation of the implementation for this library. For quick
-setup instructions, [skip to setup](./setup.md)
+Below is an in-depth explanation of the implementation for this library. For quick
+setup instructions, see [setup](./setup.md). If you just want to know how to use this library
+once it has been setup, follow the [usage guide](./usage)
 {: .bg-yellow-000.p-3 }
 
 ## Initialization lifecycle
@@ -27,14 +28,19 @@ We don't start rendering until all components have been initialized.
  all components configured with `withInitAction()` will throw an error if mounted without preparing
  it first.
 
-[^1]: Note: components configured with `allowLazy` may skip this step. For more info see the [withInitAction() API docs](./api.html#withInitAction)
+[^1]: Note: components configured with `allowLazy` may skip this step. For more info see
+the [withInitAction() API docs](./api.html#withInitAction)
 
 #### Client side
-We don't want to redo initialization that has already been done on the server. When new components mount (for example, on client-side navigation), they should be initialized as well.
+We don't want to redo initialization that has already been done on the server. When new components
+mount (for example, on client-side navigation), they should be initialized as well.
 
- 1. **First render** this is essentially the same as step 4 on the server side. All component preparation has already been done on the server.
- 2. **Set initMode** we dispatch `setInitMode(MODE_INIT_SELF)` to indicate that new components should initialize themselves as soon as they mount.
- 3. **Next render(s)** If a new component wrapped in `withInitAction()` mounts, it will automatically initialize. Additionally, a component can also be configured to re-initialize if its `props` update.
+ 1. **First render** this is essentially the same as step 4 on the server side. All component
+ preparation has already been done on the server.
+ 2. **Set initMode** we dispatch `setInitMode(MODE_INIT_SELF)` to indicate that new components
+ should initialize themselves as soon as they mount.
+ 3. **Next render(s)** If a new component wrapped in `withInitAction()` mounts, it will automatically
+ initialize. Additionally, a component can also be configured to re-initialize if its `props` update.
 
 Note: By default, the component will start rendering even if the `initAction` has not completed yet.
 For more info see the [withInitAction() API docs](./api.html#withInitAction)
@@ -67,7 +73,8 @@ We use `withInitAction()` to add the following initialization to our components:
 
 ![Example prepare tree](./assets/example-prepare-tree.png)
 
-Note: In this example, the list of posts are loaded separately from the post detail data. In another application this might be a single call
+Note: In this example, the list of posts are loaded separately from the post detail data. In another
+application this might be a single call
 {: .bg-grey-lt-100.p-3 }
 
 ---

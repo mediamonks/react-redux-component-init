@@ -10,11 +10,14 @@ import { MODE_PREPARE } from './initMode';
  * be included using Redux's `combineReducers()` under the `init` key in the root of
  * the store state.
  */
-export default (state = {
-  mode: MODE_PREPARE,
-  prepared: {},
-  selfInit: {},
-}, action) => {
+export default (
+  state = {
+    mode: MODE_PREPARE,
+    prepared: {},
+    selfInit: {},
+  },
+  action,
+) => {
   switch (action.type) {
     case SET_INIT_MODE:
       return {
@@ -44,33 +47,38 @@ export default (state = {
 };
 
 const createComponentInitValuesSelector = ({
-  componentId, initProps, options: { getPrepareKey },
-}) => createShallowEqualSelector(
-  (state, props) => extractValuesForProps(props, initProps),
-  initValues => ({
-    prepareKey: getPrepareKey(componentId, initValues),
-    initValues,
-  }),
-);
+  componentId,
+  initProps,
+  options: { getPrepareKey },
+}) =>
+  createShallowEqualSelector(
+    (state, props) => extractValuesForProps(props, initProps),
+    initValues => ({
+      prepareKey: getPrepareKey(componentId, initValues),
+      initValues,
+    }),
+  );
 
-const createComponentInitStateHelperSelector = initConfig => createSelector(
-  createComponentInitValuesSelector(initConfig),
-  state => state.selfInit,
-  state => state.prepared,
-  ({ prepareKey, initValues }, selfInit, prepared) => ({
-    prepareKey,
-    initValues,
-    selfInitState: selfInit[prepareKey],
-    preparedState: prepared[prepareKey],
-  }),
-);
+const createComponentInitStateHelperSelector = initConfig =>
+  createSelector(
+    createComponentInitValuesSelector(initConfig),
+    state => state.selfInit,
+    state => state.prepared,
+    ({ prepareKey, initValues }, selfInit, prepared) => ({
+      prepareKey,
+      initValues,
+      selfInitState: selfInit[prepareKey],
+      preparedState: prepared[prepareKey],
+    }),
+  );
 
-export const createComponentInitStateSelector = initConfig => createShallowEqualSelector(
-  createComponentInitStateHelperSelector(initConfig),
-  ({ prepareKey, initValues, selfInitState, preparedState }) => ({
-    prepareKey,
-    initValues,
-    selfInitState,
-    isPrepared: !!preparedState,
-  }),
-);
+export const createComponentInitStateSelector = initConfig =>
+  createShallowEqualSelector(
+    createComponentInitStateHelperSelector(initConfig),
+    ({ prepareKey, initValues, selfInitState, preparedState }) => ({
+      prepareKey,
+      initValues,
+      selfInitState,
+      isPrepared: !!preparedState,
+    }),
+  );

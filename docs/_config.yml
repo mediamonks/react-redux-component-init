@@ -5,7 +5,7 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-remote_theme: pmarsceill/just-the-docs
+remote_theme: flut1/just-the-docs
 repository: mediamonks/react-redux-component-init
 aux_links:
   "view it on GitHub":

@@ -6,15 +6,13 @@ import { createComponentInitStateSelector } from './reducer';
 import defaultGetInitState from './utils/defaultGetInitState';
 import initComponent from './actions/initComponent';
 import { MODE_INIT_SELF } from './initMode';
-import {
-  INIT_SELF_ASYNC,
-  INIT_SELF_NEVER,
-  INIT_SELF_UNMOUNT,
-  INIT_SELF_BLOCKING,
-} from './initSelfMode';
+import { INIT_SELF_ASYNC, INIT_SELF_UNMOUNT, INIT_SELF_BLOCKING } from './initSelfMode';
 import createPrepareKey from './utils/createPrepareKey';
 
 const componentIds = [];
+
+const INIT_ACTION_PROP_PREPARED = 'prepared';
+const INIT_ACTION_PROP_CLIENTONLY = 'clientOnly';
 
 /**
  * Attaches an initialization action to a component.
@@ -66,13 +64,39 @@ const componentIds = [];
  * @returns {function(*)}
  */
 export default (p1, p2, p3) => {
+  let initActionClient = null;
   let initProps = [];
   let initAction = p1;
+  let initActionObjectParam = false;
   let options = p2 || {};
-  if (typeof p1 === 'object') {
+  if (
+    typeof p1 === 'object' &&
+    typeof p1[INIT_ACTION_PROP_PREPARED] === 'undefined' &&
+    typeof p1[INIT_ACTION_PROP_CLIENTONLY] === 'undefined'
+  ) {
     initProps = p1;
     initAction = p2;
     options = p3 || {};
+  }
+
+  if (typeof initAction === 'object') {
+    if (
+      typeof initAction[INIT_ACTION_PROP_CLIENTONLY] !== 'function' &&
+      typeof initAction[INIT_ACTION_PROP_PREPARED] !== 'function'
+    ) {
+      throw new Error(
+        `Invalid object passed as initAction to withInitAction. Must have a property "${INIT_ACTION_PROP_CLIENTONLY}" or  "${INIT_ACTION_PROP_PREPARED}"`,
+      );
+    }
+
+    initActionObjectParam = true;
+    const initActionPrepared = initAction[INIT_ACTION_PROP_PREPARED] || null;
+    initActionClient = initAction[INIT_ACTION_PROP_CLIENTONLY] || null;
+    initAction = initActionPrepared;
+  } else if (typeof initAction !== 'function') {
+    throw new Error(
+      `Invalid initAction param with type '${typeof initAction}' passed to withInitAction. Expected either a function or an object { [${INIT_ACTION_PROP_CLIENTONLY}]: function, [${INIT_ACTION_PROP_PREPARED}]: function }`,
+    );
   }
 
   const {
@@ -84,14 +108,16 @@ export default (p1, p2, p3) => {
     allowLazy = false,
   } = options;
 
-  return (WrappedComponent) => {
+  return WrappedComponent => {
     const componentId = WrappedComponent.displayName || WrappedComponent.name;
     if (!componentId) {
       throw new Error('withInitAction() HoC requires the wrapped component to have a displayName');
     }
     // only warn for unique displayName when we do not have a custom getPrepareKey function
-    if ((getPrepareKey === createPrepareKey) && componentIds.includes(componentId)) {
-      console.warn(`Each Component passed to withInitAction() should have a unique displayName. Found duplicate name "${componentId}"`);
+    if (getPrepareKey === createPrepareKey && componentIds.includes(componentId)) {
+      console.warn(
+        `Each Component passed to withInitAction() should have a unique displayName. Found duplicate name "${componentId}"`,
+      );
     }
     componentIds.push(componentId);
 
@@ -99,6 +125,8 @@ export default (p1, p2, p3) => {
       componentId,
       initProps,
       initAction,
+      initActionClient,
+      initActionObjectParam,
       options: { reinitialize, onError, getInitState, initSelf, allowLazy, getPrepareKey },
     };
 
@@ -121,31 +149,36 @@ export default (p1, p2, p3) => {
       constructor(props) {
         super(props);
 
-        const { __modeInitSelf, __componentInitState: { isPrepared } } = props;
+        const {
+          __modeInitSelf,
+          __componentInitState: { isPrepared },
+        } = props;
 
         this.state = {
-          initializedOnce: !__modeInitSelf && isPrepared,
+          initializedOnce: !__modeInitSelf && isPrepared && !initActionClient,
         };
       }
 
       componentWillMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
-        if (initSelf !== INIT_SELF_NEVER && !allowLazy) {
-          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
-        }
+        this.props
+          .__initComponent(initValues, prepareKey, { caller: 'willMount' })
+          .catch(this.handleInitError);
       }
 
       componentDidMount() {
-        if (allowLazy) {
-          const { initValues, prepareKey } = this.props.__componentInitState;
+        const { initValues, prepareKey } = this.props.__componentInitState;
 
-          this.props.__initComponent(initValues, prepareKey).catch(this.handleInitError);
-        }
+        this.props
+          .__initComponent(initValues, prepareKey, { caller: 'didMount' })
+          .catch(this.handleInitError);
       }
 
       componentWillReceiveProps(newProps) {
-        const { __componentInitState: { selfInitState } } = newProps;
+        const {
+          __componentInitState: { selfInitState },
+        } = newProps;
         if (selfInitState) {
           this.setState(() => ({
             initializedOnce: true,
@@ -153,16 +186,23 @@ export default (p1, p2, p3) => {
         }
 
         if (initProps.length && reinitialize) {
-          const { __componentInitState: { initValues }, __initComponent } = this.props;
-          const { __componentInitState: { initValues: newInitValues, prepareKey } } = newProps;
+          const {
+            __componentInitState: { initValues },
+            __initComponent,
+          } = this.props;
+          const {
+            __componentInitState: { initValues: newInitValues, prepareKey },
+          } = newProps;
 
           if (initValues !== newInitValues) {
-            __initComponent(newInitValues, prepareKey).catch(this.handleInitError);
+            __initComponent(newInitValues, prepareKey, { caller: 'willReceiveProps' }).catch(
+              this.handleInitError,
+            );
           }
         }
       }
 
-      handleInitError = (e) => {
+      handleInitError = e => {
         if (onError) {
           onError(e);
         } else {
@@ -175,19 +215,17 @@ export default (p1, p2, p3) => {
         const { __componentInitState, __initComponent, __modeInitSelf, ...props } = this.props;
         const { selfInitState, isPrepared } = __componentInitState;
 
-        const isInitializing = __modeInitSelf ? (
-          (selfInitState === false) ||
-          ((typeof selfInitState === 'undefined') && !this.state.initializedOnce)
-        ) : (allowLazy && !isPrepared);
+        const isInitializing = __modeInitSelf
+          ? selfInitState === false ||
+            (typeof selfInitState === 'undefined' && !this.state.initializedOnce)
+          : (initAction && allowLazy && !isPrepared) || initActionClient;
 
-        const cloak = isInitializing && (
-          (initSelf === INIT_SELF_UNMOUNT) ||
-          ((initSelf === INIT_SELF_BLOCKING) && !this.state.initializedOnce)
-        );
+        const cloak =
+          isInitializing &&
+          (initSelf === INIT_SELF_UNMOUNT ||
+            (initSelf === INIT_SELF_BLOCKING && !this.state.initializedOnce));
 
-        return cloak ? null : (
-          <WrappedComponent isInitializing={isInitializing} {...props} />
-        );
+        return cloak ? null : <WrappedComponent isInitializing={isInitializing} {...props} />;
       }
     }
 
@@ -206,9 +244,8 @@ export default (p1, p2, p3) => {
         };
       },
       dispatch => ({
-        __initComponent: (initValues, prepareKey, initOptions) => dispatch(
-          initComponent(ConnectedWithInit, initValues, prepareKey, initOptions),
-        ),
+        __initComponent: (initValues, prepareKey, initOptions) =>
+          dispatch(initComponent(ConnectedWithInit, initValues, prepareKey, initOptions)),
       }),
     )(WithInit);
 

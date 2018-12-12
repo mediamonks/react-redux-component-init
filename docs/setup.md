@@ -2,7 +2,6 @@
 title: Setup
 nav_order: 3
 ---
-
 # Setup
 
 Make sure you have an existing setup with the prerequisites listed [here](./index.html#prerequisites)
@@ -30,8 +29,8 @@ the [withInitAction() HOC](./api.html#withInitAction)
 {: .bg-grey-lt-100.p-3 }
 
 ## Server side page rendering
-In the function that renders your page on the server, call `prepareComponent` with the page
-components you will render before you render your page. The example below is
+In the function that renders your page on the server, call `prepareComponent` with the top-level
+page component(s) and the props that will be passed to them. The example below is
 using [express](https://expressjs.com/) and
 [react-router](https://github.com/ReactTraining/react-router) 3, but these are not required.
 
@@ -71,4 +70,4 @@ store.dispatch(setInitMode(MODE_INIT_SELF));
 
 ---
 
-[Continue reading: API](./api.md){: .btn .btn-purple }
+[Continue reading: Usage guide](./usage){: .btn .btn-purple }

@@ -5,9 +5,13 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest",
+    "test:unit": "jest --testPathPattern=\"\\.spec\\.js$\"",
+    "test:integration": "jest --testPathPattern=\"\\.test\\.js$\"",
     "build": "npm run build:commonjs",
     "build:commonjs": "babel src --out-dir lib",
     "clean": "rimraf lib",
+    "lint": "eslint .",
+    "prettify": "prettier --write \"**/*.js\"",
     "prepublish": "npm run clean && npm run build"
   },
   "repository": {
@@ -30,12 +34,16 @@
   "bugs": {
     "url": "https://github.com/mediamonks/react-redux-component-init/issues"
   },
+  "engines": {
+    "node": ">=7.10.1"
+  },
   "homepage": "https://github.com/mediamonks/react-redux-component-init#readme",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.0",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -44,19 +52,24 @@
     "babel-preset-react": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "jest": "^20.0.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "react-redux": "^5.0.4",
     "react-test-renderer": "^15.6.1",
+    "redux": "^4.0.1",
     "redux-mock-store": "^1.2.3",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
-    "react": ">= 14.0.0",
     "prop-types": ">= 15.5.8",
+    "react": ">= 14.0.0",
     "react-redux": ">= 4.0.0"
   },
   "dependencies": {

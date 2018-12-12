@@ -16,6 +16,5 @@ import prepareComponent from './prepareComponent';
  * resolves when all components have finished initialization.
  * @example dispatch(prepareComponents([Header,HomePage,Footer], { route: '/home' }));
  */
-export default (components, props) => dispatch => Promise.all(
-  components.map(Component => dispatch(prepareComponent(Component, props))),
-);
+export default (components, props) => dispatch =>
+  Promise.all(components.map(Component => dispatch(prepareComponent(Component, props))));

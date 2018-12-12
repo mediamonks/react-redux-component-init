@@ -1,7 +1,7 @@
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 
 function isShallowEqual(a, b) {
-  if ((typeof a !== 'object') || (typeof b !== 'object')) {
+  if (typeof a !== 'object' || typeof b !== 'object') {
     return a === b;
   }
 
@@ -13,7 +13,7 @@ function isShallowEqual(a, b) {
   }
 
   if (aIsArray) {
-    return (a.length === b.length) && a.every((val, index) => val === b[index]);
+    return a.length === b.length && a.every((val, index) => val === b[index]);
   }
 
   const keysA = Object.keys(a);
@@ -23,7 +23,7 @@ function isShallowEqual(a, b) {
     return false;
   }
 
-  return keysA.every(key => (a[key] === b[key]));
+  return keysA.every(key => a[key] === b[key]);
 }
 
 const createShallowEqualSelector = createSelectorCreator(defaultMemoize, isShallowEqual);

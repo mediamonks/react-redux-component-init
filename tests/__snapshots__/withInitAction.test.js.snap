@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`isomorphic application rendering a component with prepared initAction after first-render on client renders the component on the client 1`] = `
+<div>
+  <div>
+    <h1>
+      This is a test component
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`isomorphic application server-rendering a component with prepared and clientOnly initAction renders the component on the client 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
+  <span>
+    The test param is: 
+    5
+  </span>
+  <span>
+    The test prop is: 
+    15
+  </span>
+</div>
+`;
+
+exports[`isomorphic application server-rendering a component with prepared and clientOnly initAction renders the component on the server 1`] = `"<div><h1>This is a test component</h1><span>initializing...</span><span>The test param is: 5</span><span>The test prop is: 15</span></div>"`;
+
+exports[`isomorphic application server-rendering a component with prepared initAction and calling prepareComponent() on the server renders the component on the client 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+</div>
+`;
+
+exports[`isomorphic application server-rendering a component with prepared initAction and calling prepareComponent() on the server renders the component on the server 1`] = `"<div><h1>This is a test component</h1></div>"`;
+
+exports[`isomorphic application server-rendering a component with prepared initAction and initProps calling prepareComponent with the correct prop renders the component on the client 1`] = `
+<div>
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    The test param is: 
+    5
+  </span>
+  <span>
+    The test prop is: 
+    15
+  </span>
+</div>
+`;
+
+exports[`isomorphic application server-rendering a component with prepared initAction and initProps calling prepareComponent with the correct prop renders the component on the server 1`] = `"<div><h1>This is a test component</h1><span>The test param is: 5</span><span>The test prop is: 15</span></div>"`;

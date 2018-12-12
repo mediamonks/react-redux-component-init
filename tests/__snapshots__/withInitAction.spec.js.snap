@@ -2,24 +2,38 @@
 
 exports[`withInitAction with a component that has been prepared and has completed re-initializing does not set an { isInitializing: true } prop 1`] = `
 <div>
-  completed
+  <h1>
+    This is a test component
+  </h1>
 </div>
 `;
 
 exports[`withInitAction with a component that has been prepared and is re-initializing sets an { isInitializing: true } prop 1`] = `
 <div>
-  initializing
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
 </div>
 `;
 
 exports[`withInitAction with a component that has been prepared and no initSelf state and initMode === MODE_PREPARE does not set an { isInitializing: true } prop 1`] = `
 <div>
-  completed
+  <h1>
+    This is a test component
+  </h1>
 </div>
 `;
 
 exports[`withInitAction with a component with no initSelf state and initMode === MODE_INIT_SELF sets an { isInitializing: true } prop 1`] = `
 <div>
-  initializing
+  <h1>
+    This is a test component
+  </h1>
+  <span>
+    initializing...
+  </span>
 </div>
 `;

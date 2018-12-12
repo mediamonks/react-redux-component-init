@@ -1,5 +1,6 @@
 import { MODE_PREPARE } from '../initMode';
 import extractValuesForProps from '../utils/extractValuesForProps';
+import PrepareValidationError from '../PrepareValidationError';
 
 import initComponent from './initComponent';
 
@@ -17,42 +18,55 @@ import initComponent from './initComponent';
  * function.
  * @example dispatch(prepareComponent(Comment, { commentId: 5 }));
  */
-export default (Component, props = {}) =>
-  (dispatch, getState) => {
-    // unwrap other HoC if no initConfig is found
-    while (!Component.initConfig && Component.WrappedComponent) {
-      Component = Component.WrappedComponent; // eslint-disable-line no-param-reassign
+export default (Component, props = {}) => (dispatch, getState) => {
+  // unwrap other HoC if no initConfig is found
+  while (!Component.initConfig && Component.WrappedComponent) {
+    Component = Component.WrappedComponent; // eslint-disable-line no-param-reassign
+  }
+
+  if (Component.initConfig) {
+    const {
+      componentId,
+      initProps,
+      initAction,
+      initActionClient,
+      options: { getInitState, getPrepareKey },
+    } = Component.initConfig;
+
+    const initState = getInitState(getState());
+    if (!initState) {
+      throw new ReferenceError('Could not find init state. Did you attach the init reducer?');
     }
 
-    if (Component.initConfig) {
-      const {
-        componentId,
-        initProps,
-        options: { getInitState, getPrepareKey },
-      } = Component.initConfig;
+    const { mode } = initState;
+    if (mode === MODE_PREPARE) {
+      const initValues = extractValuesForProps(props, initProps);
 
-      const initState = getInitState(getState());
-      if (!initState) {
-        throw new ReferenceError('Could not find init state. Did you attach the init reducer?');
+      initValues.forEach((initValue, index) => {
+        if (typeof initValue === 'undefined') {
+          throw new PrepareValidationError(
+            `Component "${componentId}" expected prop "${
+              initProps[index]
+            }" but was not passed to prepareComponent`,
+          );
+        }
+      });
+
+      const prepareKey = getPrepareKey(componentId, initValues);
+
+      if (!initAction && initActionClient) {
+        console.warn(
+          `Redundant call to prepareComponent() with component "${componentId}". Initialization is client-only, so preparing is not neccessary`,
+        );
       }
 
-      const { mode } = initState;
-      if (mode === MODE_PREPARE) {
-        const initValues = extractValuesForProps(props, initProps);
-
-        initValues.forEach((initValue, index) => {
-          if (typeof initValue === 'undefined') {
-            throw new ReferenceError(`Component "${componentId}" expected prop "${initProps[index]}" but was not passed to prepareComponent`);
-          }
-        });
-
-        const prepareKey = getPrepareKey(componentId, initValues);
-
-        return dispatch(initComponent(Component, initValues, prepareKey, {
-          isPrepare: true,
-        }));
-      }
+      return dispatch(
+        initComponent(Component, initValues, prepareKey, {
+          caller: 'prepareComponent',
+        }),
+      );
     }
+  }
 
-    return Promise.resolve();
-  };
+  return Promise.resolve();
+};

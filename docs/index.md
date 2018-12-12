@@ -5,7 +5,7 @@ nav_order: 1
 {::comment}
 
 
-View the rendered version of this documentation at:
+# View the rendered version of this documentation at:
 https://mediamonks.github.io/react-redux-component-init
 
 

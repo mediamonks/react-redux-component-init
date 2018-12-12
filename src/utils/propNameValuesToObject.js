@@ -8,8 +8,8 @@
  * in the `propNames` array.
  * @returns {object} The result object
  */
-export default (propNames, propValues) => propNames.reduce(
-  (result, propName, index) => {
+export default (propNames, propValues) =>
+  propNames.reduce((result, propName, index) => {
     const segments = propName.split('.');
 
     if (segments.length < 2) {
@@ -17,7 +17,7 @@ export default (propNames, propValues) => propNames.reduce(
     } else {
       const finalPropName = segments.pop();
       let target = result;
-      segments.forEach((segment) => {
+      segments.forEach(segment => {
         if (typeof target[segment] !== 'object') {
           target[segment] = {};
         }
@@ -28,6 +28,4 @@ export default (propNames, propValues) => propNames.reduce(
     }
 
     return result;
-  },
-  {},
-);
+  }, {});
