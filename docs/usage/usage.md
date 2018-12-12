@@ -59,4 +59,4 @@ In addition to the `<Post>` component, `<Footer>`, `<Comments>`, and `<UserAvata
 dynamic data from redux and need some initialization actions. This guide will show how to trigger
 these actions using `react-redux-component-init`.
 
-[Continue reading: 1. Basic Usage](./basic-usage){: .btn .btn-purple }
+[Continue reading: 1. Basic Usage](./usage/basic-usage){: .btn .btn-purple }
