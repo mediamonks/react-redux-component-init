@@ -14,7 +14,7 @@ https://mediamonks.github.io/react-redux-component-init
 {:/comment}
 
 # Basic Usage
-This guide uses the example page setup described on the [start page of usage guide](./usage)
+This guide uses the example page setup described on the [start page of usage guide](../usage)
 
 ## Initializing a basic component
 
