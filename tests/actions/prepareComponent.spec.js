@@ -171,42 +171,4 @@ describe('prepareComponent', () => {
         expect(actions).toEqual([]);
       }));
   });
-
-  it('warns the user about redundant calls with clientOnly initAction components', () => {
-    clearComponentIds();
-    const store = mockStore(modePrepareAndNothingPrepared);
-    const mockInitActionClient = jest.fn(() => Promise.resolve());
-    const MockWithInit = withInitAction(
-      {
-        clientOnly: mockInitActionClient,
-      },
-    )(SimpleInitTestComponent);
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    return preparePromise.then(() => {
-      expect(consoleWarnSpy).toHaveBeenCalled();
-      consoleWarnSpy.mockRestore();
-    });
-  });
-
-  it('does not warn the user if there is a prepared action', () => {
-    clearComponentIds();
-    const store = mockStore(modePrepareAndNothingPrepared);
-    const mockInitActionPrepared = jest.fn(() => Promise.resolve());
-    const mockInitActionClient = jest.fn(() => Promise.resolve());
-    const MockWithInit = withInitAction(
-      {
-        prepared: mockInitActionPrepared,
-        clientOnly: mockInitActionClient,
-      },
-    )(SimpleInitTestComponent);
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-    const preparePromise = store.dispatch(prepareComponent(MockWithInit, {}));
-    return preparePromise.then(() => {
-      expect(consoleWarnSpy).not.toHaveBeenCalled();
-      consoleWarnSpy.mockRestore();
-    });
-  });
 });

@@ -54,12 +54,6 @@ export default (Component, props = {}) => (dispatch, getState) => {
 
       const prepareKey = getPrepareKey(componentId, initValues);
 
-      if (!initAction && initActionClient) {
-        console.warn(
-          `Redundant call to prepareComponent() with component "${componentId}". Initialization is client-only, so preparing is not neccessary`,
-        );
-      }
-
       return dispatch(
         initComponent(Component, initValues, prepareKey, {
           caller: 'prepareComponent',
