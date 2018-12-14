@@ -48,7 +48,9 @@ If you still want to prevent the entire component from mounting, it is also poss
 `"BLOCKING"` or `"UNMOUNT"` option to `withInitAction()`. See the [api documentation](../api) for
 more details.
 
-```javascript
+```jsx
+import { withInitAction, INIT_SELF_UNMOUNT } from 'react-redux-component-init';
+
 const UserAvatar = ({ image }) => (
   <div className="user-avatar-wrapper">
     <img src={image} />
@@ -58,7 +60,7 @@ const UserAvatar = ({ image }) => (
 export default withInitAction(
   ['userId'],
   ({ userId }, dispatch) => dispatch(fetchUserAvatar(userId)),
-  { initSelf: 'UNMOUNT' } // <== this will unmount our component if it is (re)initializing
+  { initSelf: INIT_SELF_UNMOUNT } // <== this will unmount our component if it is (re)initializing
 )(
   connect(mapStateToProps)(UserAvatar)
 );

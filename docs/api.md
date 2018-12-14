@@ -64,18 +64,19 @@ An object with additional options.
  - `reinitialize` If `true`, will call `initAction` again if any of the props defined in `initProps`
  change after mount. This change is checked with strict equality (===) _Defaults to `true`_
  - `initSelf` A string that indicates the behavior for initialization on the client
- (`initMode == MODE_INIT_SELF`). Possible values:
-   - `"ASYNC"`{: style="color: #6A8759" } **default**{: .label .label-yellow} the component will
-   render immediately, even if `initAction` is still pending. It is recommended to use this option
-    and render a loading indicator or placeholder content until `initAction` is resolved. This
-    will give the user immediate feedback that something is being loaded. While the `initAction`
-    is pending, an `isInitializing` prop will be passed to the component.
-   - `"BLOCKING"`{: style="color: #6A8759" } this will cause this higher-order component not tot
-   mount the target component until the first initialization has completed. The component will
-   remain mounted during further re-initialization.
-   - `"UNMOUNT"`{: style="color: #6A8759" } same as `"BLOCKING"`{: style="color: #6A8759" } but it
-   will also unmount the component during re-initialization.
-   - `"NEVER"`{: style="color: #6A8759" } will only initialize on the server
+ (`initMode == MODE_INIT_SELF`). See an example usage below. Possible values:
+   - `INIT_SELF_ASYNC` = `"ASYNC"`{: style="color: #6A8759" } **default**{: .label .label-yellow} \\
+   the component will render immediately, even if `initAction` is still pending. It is recommended
+   to use this option and render a loading indicator or placeholder content until `initAction` is
+   resolved. This will give the user immediate feedback that something is being loaded. While the
+   `initAction` is pending, an `isInitializing` prop will be passed to the component.
+   - `INIT_SELF_BLOCKING` = `"BLOCKING"`{: style="color: #6A8759" } \\
+   this will cause this higher-order component not tot mount the target component until the first
+   initialization has completed. The component will remain mounted during further re-initialization.
+   - `INIT_SELF_UNMOUNT` = `"UNMOUNT"`{: style="color: #6A8759" } \\
+   same as `INIT_SELF_BLOCKING` but it will also unmount the component during re-initialization.
+   - `INIT_SELF_NEVER` = `"NEVER"`{: style="color: #6A8759" } \\
+   will only initialize on the server
    (`initMode == MODE_PREPARE`). Initialization will be skipped on the client.
  - `onError` Error handler for errors in `initAction`.  If given, errors will be swallowed.
  - `getPrepareKey: (componentId: string, propsArray: Array) => string` A function that generates a
@@ -101,6 +102,9 @@ An object with additional options.
 
 ``` jsx
 // Post.js
+import { withInitAction, INIT_SELF_BLOCKING } from 'react-redux-component-init';
+import { loadPostData } from '../actions/api';
+
 class Post extends React.Component {
   // ...
 }
@@ -108,10 +112,12 @@ class Post extends React.Component {
 export default withInitAction(
   ['id'],
   ({ id }, dispatch) => dispatch(loadPostData(id)),
-  { allowLazy: true }
+  { initSelf: INIT_SELF_BLOCKING }
 )(Post);
-
+```
+``` jsx
 // PostPage.js
+import { withInitAction, prepareComponent } from 'react-redux-component-init';
 import Post from './components/Post';
 // ...
 class PostPage extends React.Component {
@@ -203,7 +209,7 @@ this module
 ### Example
 {: .no_toc }
 ```javascript
-import { initMode, setInitMode } from 'react-redux-component-init';
+import { initMode, MODE_INIT_SELF } from 'react-redux-component-init';
 // ...
-dispatch(setInitMode(initMode.MODE_INIT_SELF));
+dispatch(setInitMode(MODE_INIT_SELF));
 ```
