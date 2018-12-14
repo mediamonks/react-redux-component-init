@@ -61,19 +61,40 @@ arguments are passed:
 {: .no_toc }
 
 An object with additional options.
- - `allowLazy` If `true`, no error will be thrown when the component is mounted without being prepared using `prepareComponent()` first. Instead, the `initAction` will be performed on `componentDidMount` on the client, as if it wasn't mounted on first render. This can be used to do non-critical initialization, like loading data for components that display below the fold. _Defaults to `false`_
- - `reinitialize` If `true`, will call `initAction` again if any of the props defined in `initProps` change after mount. This change is checked with strict equality (===) _Defaults to `true`_
- - `initSelf` A string that indicates the behavior for initialization on the client (`initMode == MODE_INIT_SELF`). Possible values:
-   - `"ASYNC"`{: style="color: #6A8759" } **default**{: .label .label-yellow} the component will render immediately, even if `initAction` is still pending. It is recommended to use this option and render a loading indicator or placeholder content until `initAction` is resolved. This will give the user immediate feedback that something is being loaded. While the `initAction` is pending, an `isInitializing` prop will be passed to the component.
-   - `"BLOCKING"`{: style="color: #6A8759" } this will cause this higher-order component not tot mount the target component until the first initialization has completed. The component will remain mounted during further re-initialization.
-   - `"UNMOUNT"`{: style="color: #6A8759" } same as `"BLOCKING"`{: style="color: #6A8759" } but it will also unmount the component during re-initialization.
-   - `"NEVER"`{: style="color: #6A8759" } will only initialize on the server (`initMode == MODE_PREPARE`). Initialization will be skipped on the client.
+ - `reinitialize` If `true`, will call `initAction` again if any of the props defined in `initProps`
+ change after mount. This change is checked with strict equality (===) _Defaults to `true`_
+ - `initSelf` A string that indicates the behavior for initialization on the client
+ (`initMode == MODE_INIT_SELF`). Possible values:
+   - `"ASYNC"`{: style="color: #6A8759" } **default**{: .label .label-yellow} the component will
+   render immediately, even if `initAction` is still pending. It is recommended to use this option
+    and render a loading indicator or placeholder content until `initAction` is resolved. This
+    will give the user immediate feedback that something is being loaded. While the `initAction`
+    is pending, an `isInitializing` prop will be passed to the component.
+   - `"BLOCKING"`{: style="color: #6A8759" } this will cause this higher-order component not tot
+   mount the target component until the first initialization has completed. The component will
+   remain mounted during further re-initialization.
+   - `"UNMOUNT"`{: style="color: #6A8759" } same as `"BLOCKING"`{: style="color: #6A8759" } but it
+   will also unmount the component during re-initialization.
+   - `"NEVER"`{: style="color: #6A8759" } will only initialize on the server
+   (`initMode == MODE_PREPARE`). Initialization will be skipped on the client.
  - `onError` Error handler for errors in `initAction`.  If given, errors will be swallowed.
  - `getPrepareKey: (componentId: string, propsArray: Array) => string` A function that generates a
  "prepare key" that will be used to uniquely identify a component and its props. It has the
  following signature:
- This defaults to a function that concatenates the `componentId` and the stringified `propsArray`. In most cases, this will ensure that a component instance on the server is matched to the corresponding instance on the client. However, if the props are somehow always different between server and client, you may use this function to generate a key that omits that difference.
- - `getInitState` A function that takes the Redux state and returns the init state of the reducer from this module. By default, it is assumed the state is under the `init` property. If the reducer is included elsewhere, this function can be set to retrieve the state.
+ This defaults to a function that concatenates the `componentId` and the stringified `propsArray`.
+ In most cases, this will ensure that a component instance on the server is matched to the
+ corresponding instance on the client. However, if the props are somehow always different
+ between server and client, you may use this function to generate a key that omits that difference.
+ - `getInitState` A function that takes the Redux state and returns the init state of the reducer
+ from this module. By default, it is assumed the state is under the `init` property. If the reducer
+ is included elsewhere, this function can be set to retrieve the state.
+ - `allowLazy` **advanced**{: .label .label-red} In most cases you want to use the `clientOnly`
+ property in `initAction` to defer initialization to the client (see
+ [client-only init actions](./usage/client-only)). Use this option if you have an init action that
+ sometimes needs to be deferred to the client, and sometimes prepared on the server. If `true`,
+ calling `prepareComponent()` for the `prepared` init action becomes optional. If you do not prepare
+ the component, no error will be thrown and initialization is automatically deferred to the client.
+ This has no effect on any `clientOnly` init actions. _Defaults to `false`_
 
 ### example
 {: .no_toc }
