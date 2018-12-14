@@ -203,8 +203,7 @@ the initial render on the client.
 
 ##### `initMode: string`{: .fs-4 }
 {: .no_toc }
-Either of the modes `MODE_PREPARE` or `MODE_INIT_SELF` as defined in the `initMode` export of
-this module
+Either of the modes `MODE_PREPARE` or `MODE_INIT_SELF` as defined in the exports of this module
 
 ### Example
 {: .no_toc }
