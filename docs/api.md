@@ -175,7 +175,7 @@ Promise that resolves when preparation for all components is complete
 ### Arguments
 {: .no_toc }
 
-##### `Components: Array<react.Component>`{: .fs-4 }
+##### `components: Array<react.Component>`{: .fs-4 }
 {: .no_toc }
 
 An array of components to prepare
