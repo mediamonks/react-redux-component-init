@@ -5,4 +5,4 @@ has_children: true
 permalink: /errors
 ---
 
-Heya
+# Common errors

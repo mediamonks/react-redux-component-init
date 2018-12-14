@@ -7,10 +7,10 @@ layout: default
       const mainContent = document.querySelector('.page-content');
       const fragment = window.location.hash;
       if (mainContent && fragment) {
-        const params = decodeURIComponent(fragment).slice(1).split('&').reduce((result, param) => {
+        const params = fragment.slice(1).split('&').reduce((result, param) => {
           const values = param.split('=');
           if (values.length === 2) {
-            result[values[0]] = values[1];
+            result[values[0]] = decodeURIComponent(values[1]);
           }
           return result;
         }, {});

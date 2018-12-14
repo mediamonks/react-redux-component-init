@@ -48,6 +48,12 @@ export default (Component, props = {}) => (dispatch, getState) => {
             `Component "${componentId}" expected prop "${
               initProps[index]
             }" but no value was passed to prepareComponent()`,
+            'prepare-component-expected-prop',
+            {
+              initProps: JSON.stringify(initProps),
+              Component: componentId,
+              propName: initProps[index],
+            },
           );
         }
       });
