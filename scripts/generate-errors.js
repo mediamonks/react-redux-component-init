@@ -66,6 +66,25 @@ async function errorPrepareNotCalledWithProps() {
 function errorPreparePending() {
   clearComponentIds();
   const TestComponent = withInitAction(
+    () => new Promise(resolve => setTimeout(resolve, 1000))
+  )(SimpleInitTestComponent);
+
+  const environment = new IsomorphicTestEnvironment(() => <TestComponent />, {
+    init: initReducer,
+  });
+  environment.server.store.dispatch(prepareComponent(TestComponent));
+
+  try {
+    environment.server.render();
+  } catch (e) {
+    console.log(e.message);
+    console.log('\n');
+  }
+}
+
+function errorPreparePendingWithProps() {
+  clearComponentIds();
+  const TestComponent = withInitAction(
     ['foo', 'bar'],
     () => new Promise(resolve => setTimeout(resolve, 1000))
   )(SimpleInitTestComponent);
@@ -88,5 +107,6 @@ function errorPreparePending() {
   errorPrepareNotCalled();
   await errorPrepareNotCalledWithProps();
   errorPreparePending();
+  errorPreparePendingWithProps();
 })();
 
