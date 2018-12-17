@@ -1,6 +1,6 @@
 ---
 title: prepareComponent() expected prop
-nav_order: 1
+nav_order: 3
 parent: Common errors
 layout: error
 ---

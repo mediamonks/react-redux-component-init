@@ -131,7 +131,7 @@ class PostPage extends React.Component {
 
 export default withInitAction(
   ['location.query'],
-  ({ location: { query } }) => dispatch(prepareComponent(Post, { id: query.postId }))
+  ({ location: { query } }, dispatch) => dispatch(prepareComponent(Post, { id: query.postId }))
 )(PostPage);
 ```
 

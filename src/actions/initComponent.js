@@ -98,20 +98,40 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
 
   if (errorNotPrepared) {
     if (typeof prepared[prepareKey] === 'undefined') {
-      const initPropsObj = propNameValuesToObject(initProps, initValues);
-      throw new PrepareValidationError(
-        `Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: ${JSON.stringify(
-          initPropsObj,
-        )}`,
-      );
+      if (initProps.length) {
+        const initPropsObj = propNameValuesToObject(initProps, initValues);
+        const initPropsString = JSON.stringify(initPropsObj);
+        throw new PrepareValidationError(
+          `Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: ${JSON.stringify(
+            initPropsObj,
+          )}`,
+          'prepare-component-not-called-with-props',
+          {
+            Component: componentId,
+            initPropsObject: initPropsString.length > 100 ? `${initPropsString.substring(0, 100)}...` : initPropsString,
+          }
+        );
+      } else {
+        throw new PrepareValidationError(
+          `Expected component "${componentId}" to be prepared but prepareComponent has not been called`,
+          'prepare-component-not-called',
+          { Component: componentId }
+        );
+      }
     } else if (prepared[prepareKey] === false) {
       let message = `Component "${componentId}" is preparing but preparation has not completed`;
       const initPropsObj = propNameValuesToObject(initProps, initValues);
+      let initPropsString = '(no init props)';
 
       if (initProps.length) {
         message = `Component "${componentId}" is preparing for props ${JSON.stringify(
           initPropsObj,
         )} but preparation has not completed`;
+
+        initPropsString = JSON.stringify(initPropsObj);
+        if (initPropsString.length > 100) {
+          initPropsString = `${initPropsString.substring(0, 100)}...`;
+        }
       }
 
       throw new PrepareValidationError(
@@ -119,7 +139,7 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         'preparation-not-completed',
         {
           Component: componentId,
-          initPropsObject: initProps.length ? JSON.stringify(initPropsObj).substring(0, 100) : '(no init props)',
+          initPropsObject: initPropsString,
         },
       );
     }
