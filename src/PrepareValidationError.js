@@ -1,6 +1,6 @@
 import ExtendableError from './utils/ExtendableError';
 
-const ERROR_BASE_URL = 'http://localhost:4000/errors/';
+const ERROR_BASE_URL = 'https://mediamonks.github.io/react-redux-component-init/errors/';
 
 class PrepareValidationError extends ExtendableError {
   constructor(message, errorId, meta) {

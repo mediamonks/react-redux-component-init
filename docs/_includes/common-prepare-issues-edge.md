@@ -30,6 +30,13 @@ import { MyComponent } from './components/MyComponent'; // <== accidentally impo
 dispatch(prepareComponent(MyComponent));
 ```
 
+In the above example, the default export should be imported instead of the named export:
+```javascript
+// fixed
+import MyComponent from './components/MyComponent';
+```
+
+
 #### prepareComponent() is called from a clientOnly init action
 `clientOnly` init actions are not called on the server. If this is where you dispatch `prepareComponent`,
 it will not happen in time. For example:

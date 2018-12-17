@@ -24,7 +24,7 @@ layout: default
           return result;
         }, {});
 
-        const whitelist = ['Component', 'propName', 'initProps', 'initPropsObject'];
+        const whitelist = ['Component', 'propName', 'initProps', 'initPropsObject', 'returnType', 'initActionType'];
         const contentHTML = mainContent.innerHTML;
         const tags = whitelist.filter(name => (contentHTML.indexOf('{' + name + '}') >= 0));
 

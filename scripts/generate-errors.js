@@ -5,6 +5,7 @@ import SimpleInitTestComponent from '../tests/fixtures/SimpleInitTestComponent';
 import IsomorphicTestEnvironment from '../tests/IsomorphicTestEnvironment';
 import initReducer from '../src/reducer';
 import prepareComponent from '../src/actions/prepareComponent';
+import PrepareValidationError from '../src/PrepareValidationError';
 
 function errorPrepareExpectedProp() {
   clearComponentIds();
@@ -102,11 +103,49 @@ function errorPreparePendingWithProps() {
   }
 }
 
+async function errorNoPromiseServerDefault() {
+  clearComponentIds();
+  const TestComponent = withInitAction(
+    () => 8
+  )(SimpleInitTestComponent);
+
+  const environment = new IsomorphicTestEnvironment(() => <TestComponent />, {
+    init: initReducer,
+  });
+
+  try {
+    await environment.server.store.dispatch(prepareComponent(TestComponent));
+  } catch (e) {
+    console.log(e.message);
+    console.log('\n');
+  }
+}
+
+async function errorNoPromiseServer() {
+  clearComponentIds();
+  const TestComponent = withInitAction(
+    { prepared: () => 'joo' }
+  )(SimpleInitTestComponent);
+
+  const environment = new IsomorphicTestEnvironment(() => <TestComponent />, {
+    init: initReducer,
+  });
+
+  try {
+    await environment.server.store.dispatch(prepareComponent(TestComponent));
+  } catch (e) {
+    console.log(e.message);
+    console.log('\n');
+  }
+}
+
 (async function main() {
   errorPrepareExpectedProp();
   errorPrepareNotCalled();
   await errorPrepareNotCalledWithProps();
   errorPreparePending();
   errorPreparePendingWithProps();
+  errorNoPromiseServer();
+  errorNoPromiseServerDefault();
 })();
 
