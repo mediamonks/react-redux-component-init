@@ -47,7 +47,13 @@ export default (Component, props = {}) => (dispatch, getState) => {
           throw new PrepareValidationError(
             `Component "${componentId}" expected prop "${
               initProps[index]
-            }" but was not passed to prepareComponent`,
+            }" but no value was passed to prepareComponent()`,
+            'prepare-component-expected-prop',
+            {
+              initProps: JSON.stringify(initProps),
+              Component: componentId,
+              propName: initProps[index],
+            },
           );
         }
       });

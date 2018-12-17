@@ -1,0 +1,73 @@
+---
+layout: default
+---
+
+<script type="text/javascript">
+    function replaceValues() {
+      function safe(s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      const mainContent = document.querySelector('.page-content');
+      const fragment = window.location.hash;
+      if (mainContent && fragment) {
+        const params = fragment.slice(1).split('&').reduce((result, param) => {
+          const values = param.split('=');
+          if (values.length === 2) {
+            result[values[0]] = decodeURIComponent(values[1]);
+          }
+          return result;
+        }, {});
+
+        const whitelist = ['Component', 'propName', 'initProps', 'initPropsObject', 'returnType', 'initActionType'];
+        const contentHTML = mainContent.innerHTML;
+        const tags = whitelist.filter(name => (contentHTML.indexOf('{' + name + '}') >= 0));
+
+        if (tags.length) {
+          if (tags.every(name => params[name])) {
+            mainContent.innerHTML = whitelist.reduce((result, name) => {
+              if (params[name]) {
+                const regex = new RegExp('\\{' + name + '\\}', 'g');
+                return result.replace(regex, safe(params[name]));
+              }
+
+              return result;
+            }, contentHTML);
+            const withVarsContainers = Array.from(document.querySelectorAll('.with-vars'));
+            withVarsContainers.forEach(container => (container.style.display = 'block'));
+            return;
+          }
+        }
+      }
+
+      const fallbackContainers = Array.from(document.querySelectorAll('.fallback'));
+      fallbackContainers.forEach(container => (container.style.display = 'block'));
+    }
+
+    document.addEventListener('DOMContentLoaded', replaceValues);
+</script>
+
+<style>
+    h2 code {
+        font-size: inherit;
+        background: transparent;
+        display: block;
+        padding: 1rem;
+        color: #bc2533;
+    }
+
+    h4 {
+        text-transform: none;
+        font-weight: 600;
+        letter-spacing: inherit;
+        font-size: 1rem !important;
+        line-height: 1.15;
+    }
+</style>
+
+{{ content }}

@@ -82,7 +82,7 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
       shouldCallInitActionClient =
         !!initActionClient &&
         // mounted on the client (after first render)
-        (initSelf !== INIT_SELF_NEVER);
+        initSelf !== INIT_SELF_NEVER;
       break;
     case 'willReceiveProps':
       // reinitialize is checked in withInitAction
@@ -98,16 +98,49 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
 
   if (errorNotPrepared) {
     if (typeof prepared[prepareKey] === 'undefined') {
-      const initPropsObj = propNameValuesToObject(initProps, initValues);
-      throw new PrepareValidationError(
-        `Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: \n${JSON.stringify(
-          initPropsObj,
-        )}`,
-      );
+      if (initProps.length) {
+        const initPropsObj = propNameValuesToObject(initProps, initValues);
+        const initPropsString = JSON.stringify(initPropsObj);
+        throw new PrepareValidationError(
+          `Expected component "${componentId}" to be prepared but prepareComponent has not been called with props: ${JSON.stringify(
+            initPropsObj,
+          )}`,
+          'prepare-component-not-called-with-props',
+          {
+            Component: componentId,
+            initPropsObject:
+              initPropsString.length > 100
+                ? `${initPropsString.substring(0, 100)}...`
+                : initPropsString,
+          },
+        );
+      } else {
+        throw new PrepareValidationError(
+          `Expected component "${componentId}" to be prepared but prepareComponent has not been called`,
+          'prepare-component-not-called',
+          { Component: componentId },
+        );
+      }
     } else if (prepared[prepareKey] === false) {
-      throw new PrepareValidationError(
-        `Expected component "${componentId}" to be prepared but preparation is still pending`,
-      );
+      let message = `Component "${componentId}" is preparing but preparation has not completed`;
+      const initPropsObj = propNameValuesToObject(initProps, initValues);
+      let initPropsString = '(no init props)';
+
+      if (initProps.length) {
+        message = `Component "${componentId}" is preparing for props ${JSON.stringify(
+          initPropsObj,
+        )} but preparation has not completed`;
+
+        initPropsString = JSON.stringify(initPropsObj);
+        if (initPropsString.length > 100) {
+          initPropsString = `${initPropsString.substring(0, 100)}...`;
+        }
+      }
+
+      throw new PrepareValidationError(message, 'preparation-not-completed', {
+        Component: componentId,
+        initPropsObject: initPropsString,
+      });
     }
   }
 
@@ -133,10 +166,12 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         : Promise.resolve();
 
       if (typeof initActionReturn.then !== 'function') {
-        const error = new Error(
-          `Expected initAction${
-            initActionObjectParam ? '.server' : ''
-          } to return a Promise. Returned an ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`,
+        const initActionType = initActionObjectParam ? 'initAction.prepared' : 'initAction';
+
+        const error = new PrepareValidationError(
+          `Expected ${initActionType} to return a Promise. Returned a ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`,
+          'init-action-must-return-promise',
+          { initActionType, Component: componentId, returnType: typeof initActionReturn }
         );
         error.isInvalidReturnError = true;
         throw error;
@@ -150,8 +185,10 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         : Promise.resolve();
 
       if (typeof initActionClientReturn.then !== 'function') {
-        const error = new Error(
-          `Expected initAction.client to return a Promise. Returned an ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`,
+        const error = new PrepareValidationError(
+          `Expected initAction.clientOnly to return a Promise. Returned a ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`,
+          'init-action-must-return-promise',
+          { initActionType: 'initAction.clientOnly', Component: componentId, returnType: typeof initActionClientReturn }
         );
         error.isInvalidReturnError = true;
         throw error;
