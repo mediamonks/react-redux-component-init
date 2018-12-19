@@ -288,4 +288,55 @@ describe('withInitAction', () => {
     );
     expect(WithInit.initConfig.initProps).toEqual(['a', 'b', 'c']);
   });
+
+
+
+  describe('with two components with the same name', () => {
+    describe('with a unique custom component id', () => {
+      it('does not warn and stores the custom id', () => {
+        clearComponentIds();
+        const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        const WithInit = withInitAction(
+          ['a', 'b', 'c'],
+          () => Promise.resolve()
+        )('CustomName')(SimpleInitTestComponent);
+
+        // eslint-disable-next-line no-unused-vars
+        const WithInit2 = withInitAction(
+          ['a', 'b', 'c'],
+          () => Promise.resolve()
+        )(SimpleInitTestComponent);
+
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
+
+        consoleWarnSpy.mockRestore();
+
+        expect(WithInit.initConfig.componentId).toBe('CustomName');
+      });
+    });
+
+    describe('without a custom component id', () => {
+      it('warns about duplicate component ids', () => {
+        clearComponentIds();
+        const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        // eslint-disable-next-line no-unused-vars
+        const WithInit = withInitAction(
+          ['a', 'b', 'c'],
+          () => Promise.resolve()
+        )(SimpleInitTestComponent);
+
+        // eslint-disable-next-line no-unused-vars
+        const WithInit2 = withInitAction(
+          ['a', 'b', 'c'],
+          () => Promise.resolve()
+        )(SimpleInitTestComponent);
+
+        expect(consoleWarnSpy).toHaveBeenCalled();
+
+        consoleWarnSpy.mockRestore();
+      });
+    })
+  });
 });
