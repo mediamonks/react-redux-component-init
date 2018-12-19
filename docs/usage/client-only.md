@@ -9,9 +9,6 @@ This guide uses the example page setup described on the [start page of usage gui
 
 ## Deferring initialization to the client (browser)
 
-This feature will be in the next release (v1.0)
-{: .bg-red-000.m-1.p-6 }
-
 Sometimes we don't want a component to initialize on the server. Here are some example reasons:
 
  - We want to load a component later because it is not critical to the user experience
