@@ -143,7 +143,7 @@ export default withInitAction(
 
 ## withInitAction `([initProps], initAction, [options])(componentId)(Component)` **advanced**{: .label .label-red}
 {: #withInitActionCustom }
-You can pass a custom component id to `withInitAction`. Normally the component id is derrived from
+You can pass a custom component id to `withInitAction`. Normally the component id is derived from
 the `displayName` of the component (or if that does not exist, the `.name` property). This id is
 supposed to be unique, because it is used internally to reference which components have been prepared.
 If for whatever reason your component does not have a name or does not have a unique name, you can
