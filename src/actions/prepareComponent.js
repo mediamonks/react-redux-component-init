@@ -28,8 +28,6 @@ export default (Component, props = {}) => (dispatch, getState) => {
     const {
       componentId,
       initProps,
-      initAction,
-      initActionClient,
       options: { getInitState, getPrepareKey },
     } = Component.initConfig;
 

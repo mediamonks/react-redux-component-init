@@ -5,7 +5,6 @@ import SimpleInitTestComponent from '../tests/fixtures/SimpleInitTestComponent';
 import IsomorphicTestEnvironment from '../tests/IsomorphicTestEnvironment';
 import initReducer from '../src/reducer';
 import prepareComponent from '../src/actions/prepareComponent';
-import PrepareValidationError from '../src/PrepareValidationError';
 
 function errorPrepareExpectedProp() {
   clearComponentIds();
