@@ -8,6 +8,7 @@ import initComponent from './actions/initComponent';
 import { MODE_INIT_SELF } from './initMode';
 import { INIT_SELF_ASYNC, INIT_SELF_UNMOUNT, INIT_SELF_BLOCKING } from './initSelfMode';
 import createPrepareKey from './utils/createPrepareKey';
+import optionalParamCurried from './utils/optionalParamCurried';
 
 const componentIds = [];
 
@@ -108,15 +109,15 @@ export default (p1, p2, p3) => {
     allowLazy = false,
   } = options;
 
-  return WrappedComponent => {
-    const componentId = WrappedComponent.displayName || WrappedComponent.name;
+  return optionalParamCurried('string', (customComponentId, WrappedComponent) => {
+    const componentId = customComponentId || WrappedComponent.displayName || WrappedComponent.name;
     if (!componentId) {
       throw new Error('withInitAction() HoC requires the wrapped component to have a displayName');
     }
     // only warn for unique displayName when we do not have a custom getPrepareKey function
     if (getPrepareKey === createPrepareKey && componentIds.includes(componentId)) {
       console.warn(
-        `Each Component passed to withInitAction() should have a unique displayName. Found duplicate name "${componentId}"`,
+        `Each Component passed to withInitAction() should have a unique id. Found duplicate name "${componentId}\n Consider passing a custom id, see: https://mediamonks.github.io/react-redux-component-init/api.html#withInitActionCustom"`,
       );
     }
     componentIds.push(componentId);
@@ -252,7 +253,7 @@ export default (p1, p2, p3) => {
     ConnectedWithInit.initConfig = initConfig;
 
     return ConnectedWithInit;
-  };
+  });
 };
 
 /**

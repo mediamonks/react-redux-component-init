@@ -97,6 +97,11 @@ An object with additional options.
  the component, no error will be thrown and initialization is automatically deferred to the client.
  This has no effect on any `clientOnly` init actions. _Defaults to `false`_
 
+### Returns `function`
+{: .no_toc }
+Returns a function that can be used to add the init action to a component. The function will
+return a new component. See [Higher-Order Components](https://reactjs.org/docs/higher-order-components.html)
+
 ### example
 {: .no_toc }
 
@@ -135,6 +140,39 @@ export default withInitAction(
 )(PostPage);
 ```
 
+
+## withInitAction `([initProps], initAction, [options])(componentId)(Component)` **advanced**{: .label .label-red}
+{: #withInitActionCustom }
+You can pass a custom component id to `withInitAction`. Normally the component id is derived from
+the `displayName` of the component (or if that does not exist, the `.name` property). This id is
+supposed to be unique, because it is used internally to reference which components have been prepared.
+If for whatever reason your component does not have a name or does not have a unique name, you can
+use this syntax of `withInitAction` to pass a custom name.
+
+API is otherwise identical to [withInitAction](#withInitAction)
+
+### example
+{: .no_toc }
+
+``` jsx
+class Post extends React.Component {
+  // ...
+}
+```
+```jsx
+// Regular usage, component id will be 'Post'
+export default withInitAction(
+  (props, dispatch) => dispatch(loadPostData()),
+  { initSelf: INIT_SELF_BLOCKING }
+)(Post);
+```
+```jsx
+// Custom component id, component id will be 'Custom'
+export default withInitAction(
+  (props, dispatch) => dispatch(loadPostData()),
+  { initSelf: INIT_SELF_BLOCKING }
+)('Custom')(Post);
+```
 
 ## prepareComponent `(Component, props)`
 {: #prepareComponent }
