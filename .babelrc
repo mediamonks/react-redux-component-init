@@ -1,15 +1,31 @@
 {
 	"presets": [
-		"es2015",
-		"react"
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"browsers": ["last 2 versions"],
+					"node": "8"
+				},
+				"useBuiltIns": false
+			}
+		],
+		"@babel/react"
 	],
 	"plugins": [
-		"transform-class-properties",
-		"transform-object-rest-spread",
-		"transform-export-extensions",
-		"transform-strict-mode",
+		"@babel/proposal-class-properties",
+		"@babel/syntax-object-rest-spread",
+		"@babel/plugin-proposal-export-namespace-from",
+		"@babel/transform-strict-mode",
 		["babel-plugin-transform-builtin-extend", {
 			"globals": ["Error", "Array"]
 		}]
-	]
+	],
+	"env": {
+		"test": {
+			"plugins": [
+				"@babel/plugin-transform-runtime"
+			]
+		}
+	}
 }
