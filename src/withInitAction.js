@@ -160,14 +160,6 @@ export default (p1, p2, p3) => {
         };
       }
 
-      componentWillMount() {
-        const { initValues, prepareKey } = this.props.__componentInitState;
-
-        this.props
-          .__initComponent(initValues, prepareKey, { caller: 'willMount' })
-          .catch(this.handleInitError);
-      }
-
       componentDidMount() {
         const { initValues, prepareKey } = this.props.__componentInitState;
 
