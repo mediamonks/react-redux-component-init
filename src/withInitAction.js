@@ -173,23 +173,27 @@ export default (p1, p2, p3) => {
           __componentInitState: { selfInitState },
         } = newProps;
         if (selfInitState) {
-          this.setState(() => ({
+          return {
             initializedOnce: true,
-          }));
+          };
         }
 
+        return null;
+      }
+
+      componentDidUpdate(prevProps) {
         if (initProps.length && reinitialize) {
           const {
             __componentInitState: { initValues },
             __initComponent,
-          } = this.props;
+          } = [prevProps];
           const {
             __componentInitState: { initValues: newInitValues, prepareKey },
-          } = newProps;
+          } = this.props;
 
           if (initValues !== newInitValues) {
             __initComponent(newInitValues, prepareKey, {
-              caller: 'getDerivedStateFromProps',
+              caller: 'didUpdate',
             }).catch(this.handleInitError);
           }
         }

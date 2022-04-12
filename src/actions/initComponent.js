@@ -74,7 +74,7 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         // mounted on the client (after first render)
         initSelf !== INIT_SELF_NEVER;
       break;
-    case 'getDerivedStateFromProps':
+    case 'didUpdate':
       errorNotPrepared = false;
       shouldCallInitAction = !!initAction;
       shouldCallInitActionClient = !!initActionClient;
