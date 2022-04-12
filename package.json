@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-component-init",
+  "name": "@mediamonks/react-redux-component-init",
   "version": "2.0.0",
   "description": "A library to manage async component initialization in isomorphic React/Redux applications with server-side rendering",
   "main": "./lib/index.js",
@@ -18,6 +18,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mediamonks/react-redux-component-init.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "react",
