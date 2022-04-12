@@ -168,7 +168,7 @@ export default (p1, p2, p3) => {
           .catch(this.handleInitError);
       }
 
-      getDerivedStateFromProps(newProps) {
+      static getDerivedStateFromProps(newProps) {
         const {
           __componentInitState: { selfInitState },
         } = newProps;

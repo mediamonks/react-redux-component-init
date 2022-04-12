@@ -1,6 +1,6 @@
 {
   "name": "@mediamonks/react-redux-component-init",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A library to manage async component initialization in isomorphic React/Redux applications with server-side rendering",
   "main": "./lib/index.js",
   "scripts": {
