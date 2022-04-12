@@ -168,7 +168,7 @@ export default (p1, p2, p3) => {
           .catch(this.handleInitError);
       }
 
-      componentWillReceiveProps(newProps) {
+      getDerivedStateFromProps(newProps) {
         const {
           __componentInitState: { selfInitState },
         } = newProps;
@@ -188,9 +188,9 @@ export default (p1, p2, p3) => {
           } = newProps;
 
           if (initValues !== newInitValues) {
-            __initComponent(newInitValues, prepareKey, { caller: 'willReceiveProps' }).catch(
-              this.handleInitError,
-            );
+            __initComponent(newInitValues, prepareKey, {
+              caller: 'getDerivedStateFromProps',
+            }).catch(this.handleInitError);
           }
         }
       }
