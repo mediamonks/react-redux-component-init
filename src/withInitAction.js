@@ -152,12 +152,16 @@ export default (p1, p2, p3) => {
 
         const {
           __modeInitSelf,
-          __componentInitState: { isPrepared },
+          __componentInitState: { isPrepared, initValues, prepareKey },
         } = props;
 
         this.state = {
           initializedOnce: !__modeInitSelf && isPrepared && !initActionClient,
         };
+
+        this.props
+          .__initComponent(initValues, prepareKey, { caller: 'constructor' })
+          .catch(this.handleInitError);
       }
 
       componentDidMount() {
