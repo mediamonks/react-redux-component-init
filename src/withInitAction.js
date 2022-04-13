@@ -186,7 +186,7 @@ export default (p1, p2, p3) => {
           const {
             __componentInitState: { initValues },
             __initComponent,
-          } = [prevProps];
+          } = prevProps;
           const {
             __componentInitState: { initValues: newInitValues, prepareKey },
           } = this.props;
