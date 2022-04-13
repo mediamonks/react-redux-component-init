@@ -62,26 +62,24 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
       shouldCallInitActionClient = false;
       break;
     case 'didMount':
-      errorNotPrepared = false;
+      errorNotPrepared = !!initAction && mode === MODE_PREPARE && !allowLazy;
       shouldCallInitAction =
         !!initAction &&
-        // mounted on the client (after first render), lazy allowed
-        ((mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER && allowLazy) ||
+        // mounted on the client (after first render), lazy not allowed
+        ((mode === MODE_INIT_SELF && initSelf !== INIT_SELF_NEVER && !allowLazy) ||
           // first render, not already prepared, lazy allowed
           (mode === MODE_PREPARE && !isPrepared && allowLazy));
-      shouldCallInitActionClient =
-        !!initActionClient &&
-        // mounted on the client (after first render)
-        initSelf !== INIT_SELF_NEVER;
+      shouldCallInitActionClient = false;
       break;
     case 'didUpdate':
+      // reinitialize is checked in withInitAction
       errorNotPrepared = false;
       shouldCallInitAction = !!initAction;
       shouldCallInitActionClient = !!initActionClient;
       break;
     default:
       throw new Error(
-        `Unexpected value '${caller}' for caller. Expected one of: 'prepareComponent', 'didMount', 'didUpdate'`,
+        `Unexpected value '${caller}' for caller. Expected one of: 'prepareComponent', 'didMount', 'willMount', 'willReceiveProps'`,
       );
   }
 
@@ -155,12 +153,10 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         : Promise.resolve();
 
       if (typeof initActionReturn.then !== 'function') {
-        const initActionType = initActionObjectParam ? 'initAction.prepared' : 'initAction';
-
-        const error = new PrepareValidationError(
-          `Expected ${initActionType} to return a Promise. Returned a ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`,
-          'init-action-must-return-promise',
-          { initActionType, Component: componentId, returnType: typeof initActionReturn },
+        const error = new Error(
+          `Expected initAction${
+            initActionObjectParam ? '.server' : ''
+          } to return a Promise. Returned an ${typeof initActionReturn} instead. Check the initAction for "${componentId}"`,
         );
         error.isInvalidReturnError = true;
         throw error;
@@ -174,14 +170,8 @@ export default (Component, initValues, prepareKey, { caller } = {}) => (dispatch
         : Promise.resolve();
 
       if (typeof initActionClientReturn.then !== 'function') {
-        const error = new PrepareValidationError(
-          `Expected initAction.clientOnly to return a Promise. Returned a ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`,
-          'init-action-must-return-promise',
-          {
-            initActionType: 'initAction.clientOnly',
-            Component: componentId,
-            returnType: typeof initActionClientReturn,
-          },
+        const error = new Error(
+          `Expected initAction.client to return a Promise. Returned an ${typeof initActionClientReturn} instead. Check the initAction for "${componentId}"`,
         );
         error.isInvalidReturnError = true;
         throw error;
